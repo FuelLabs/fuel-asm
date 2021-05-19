@@ -50,7 +50,7 @@ pub enum Opcode {
     /// #### Execution
     /// `$of` is assigned the overflow of the operation.
     /// `$err` is cleared.
-    ADD(RegisterId, RegisterId, RegisterId) = OP_ADD,
+    ADD(RegisterId, RegisterId, RegisterId),
 
     /// Adds a register and an immediate value.
     ///
@@ -64,7 +64,7 @@ pub enum Opcode {
     /// #### Execution
     /// `$of` is assigned the overflow of the operation.
     /// `$err` is cleared.
-    ADDI(RegisterId, RegisterId, Immediate12) = OP_ADDI,
+    ADDI(RegisterId, RegisterId, Immediate12),
 
     /// Bitwise ANDs two registers.
     ///
@@ -77,7 +77,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    AND(RegisterId, RegisterId, RegisterId) = OP_AND,
+    AND(RegisterId, RegisterId, RegisterId),
 
     /// Bitwise ANDs a register and an immediate value.
     ///
@@ -91,7 +91,7 @@ pub enum Opcode {
     /// #### Execution
     /// `imm` is extended to 64 bits, with the high 52 bits set to `0`.
     /// `$of` and `$err` are cleared.
-    ANDI(RegisterId, RegisterId, Immediate12) = OP_ANDI,
+    ANDI(RegisterId, RegisterId, Immediate12),
 
     /// Divides two registers.
     ///
@@ -106,7 +106,7 @@ pub enum Opcode {
     /// If `$rC == 0`, `$rA` is cleared and `$err` is set to `true`.
     /// Otherwise, `$err` is cleared.
     /// `$of` is cleared.
-    DIV(RegisterId, RegisterId, RegisterId) = OP_DIV,
+    DIV(RegisterId, RegisterId, RegisterId),
 
     /// Divides a register and an immediate value.
     ///
@@ -121,7 +121,7 @@ pub enum Opcode {
     /// If `imm == 0`, `$rA` is cleared and `$err` is set to `true`.
     /// Otherwise, `$err` is cleared.
     /// `$of` is cleared.
-    DIVI(RegisterId, RegisterId, Immediate12) = OP_DIVI,
+    DIVI(RegisterId, RegisterId, Immediate12),
 
     /// Compares two registers for equality.
     ///
@@ -134,7 +134,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    EQ(RegisterId, RegisterId, RegisterId) = OP_EQ,
+    EQ(RegisterId, RegisterId, RegisterId),
 
     /// Raises one register to the power of another.
     ///
@@ -149,7 +149,7 @@ pub enum Opcode {
     /// If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise
     /// `$of` is cleared.
     /// `$err` is cleared.
-    EXP(RegisterId, RegisterId, RegisterId) = OP_EXP,
+    EXP(RegisterId, RegisterId, RegisterId),
 
     /// Raises one register to the power of an immediate value.
     ///
@@ -164,7 +164,7 @@ pub enum Opcode {
     /// If the result cannot fit in 8 bytes, `$of` is set to `1`, otherwise
     /// `$of` is cleared.
     /// `$err` is cleared.
-    EXPI(RegisterId, RegisterId, Immediate12) = OP_EXPI,
+    EXPI(RegisterId, RegisterId, Immediate12),
 
     /// Compares two registers for greater-than.
     ///
@@ -177,7 +177,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    GT(RegisterId, RegisterId, RegisterId) = OP_GT,
+    GT(RegisterId, RegisterId, RegisterId),
 
     /// The (integer) logarithm base `$rC` of `$rB`.
     ///
@@ -196,7 +196,7 @@ pub enum Opcode {
     /// `true`.
     ///
     /// Otherwise, `$of` and `$err` are cleared.
-    MLOG(RegisterId, RegisterId, RegisterId) = OP_MLOG,
+    MLOG(RegisterId, RegisterId, RegisterId),
 
     /// The (integer) `$rC`th root of `$rB`.
     ///
@@ -212,7 +212,7 @@ pub enum Opcode {
     /// `true`.
     ///
     /// Otherwise, `$of` and `$err` are cleared.
-    MROO(RegisterId, RegisterId, RegisterId) = OP_MROO,
+    MROO(RegisterId, RegisterId, RegisterId),
 
     /// Modulo remainder of two registers.
     ///
@@ -228,7 +228,7 @@ pub enum Opcode {
     /// `true`.
     ///
     /// Otherwise, `$of` and `$err` are cleared.
-    MOD(RegisterId, RegisterId, RegisterId) = OP_MOD,
+    MOD(RegisterId, RegisterId, RegisterId),
 
     /// Modulo remainder of a register and an immediate value.
     ///
@@ -244,7 +244,7 @@ pub enum Opcode {
     /// `true`.
     ///
     /// Otherwise, `$of` and `$err` are cleared.
-    MODI(RegisterId, RegisterId, Immediate12) = OP_MODI,
+    MODI(RegisterId, RegisterId, Immediate12),
 
     /// Copy from one register to another.
     ///
@@ -258,7 +258,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    MOVE(RegisterId, RegisterId) = OP_MOVE,
+    MOVE(RegisterId, RegisterId),
 
     /// Multiplies two registers.
     ///
@@ -273,7 +273,7 @@ pub enum Opcode {
     /// `$of` is assigned the overflow of the operation.
     ///
     /// `$err` is cleared.
-    MUL(RegisterId, RegisterId, RegisterId) = OP_MUL,
+    MUL(RegisterId, RegisterId, RegisterId),
 
     /// Multiplies a register and an immediate value.
     ///
@@ -288,7 +288,7 @@ pub enum Opcode {
     /// `$of` is assigned the overflow of the operation.
     ///
     /// `$err` is cleared.
-    MULI(RegisterId, RegisterId, Immediate12) = OP_MULI,
+    MULI(RegisterId, RegisterId, Immediate12),
 
     /// Bitwise NOT a register.
     ///
@@ -301,7 +301,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    NOT(RegisterId, RegisterId) = OP_NOT,
+    NOT(RegisterId, RegisterId),
 
     /// Bitwise ORs two registers.
     ///
@@ -314,7 +314,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    OR(RegisterId, RegisterId, RegisterId) = OP_OR,
+    OR(RegisterId, RegisterId, RegisterId),
 
     /// Bitwise ORs a register and an immediate value.
     ///
@@ -329,7 +329,7 @@ pub enum Opcode {
     /// `imm` is extended to 64 bits, with the high 52 bits set to `0`.
     ///
     /// `$of` and `$err` are cleared.
-    ORI(RegisterId, RegisterId, Immediate12) = OP_ORI,
+    ORI(RegisterId, RegisterId, Immediate12),
 
     /// Left shifts a register by a register.
     ///
@@ -345,7 +345,7 @@ pub enum Opcode {
     /// `$of` is assigned the overflow of the operation.
     ///
     /// `$err` is cleared.
-    SLL(RegisterId, RegisterId, RegisterId) = OP_SLL,
+    SLL(RegisterId, RegisterId, RegisterId),
 
     /// Left shifts a register by an immediate value.
     ///
@@ -361,7 +361,7 @@ pub enum Opcode {
     /// `$of` is assigned the overflow of the operation.
     ///
     /// `$err` is cleared.
-    SLLI(RegisterId, RegisterId, Immediate12) = OP_SLLI,
+    SLLI(RegisterId, RegisterId, Immediate12),
 
     /// Right shifts a register by a register.
     ///
@@ -378,7 +378,7 @@ pub enum Opcode {
     /// high byte of a 128-bit register.
     ///
     /// `$err` is cleared.
-    SRL(RegisterId, RegisterId, RegisterId) = OP_SRL,
+    SRL(RegisterId, RegisterId, RegisterId),
 
     /// Right shifts a register by an immediate value.
     ///
@@ -395,7 +395,7 @@ pub enum Opcode {
     /// high byte of a 128-bit register.
     ///
     /// `$err` is cleared.
-    SRLI(RegisterId, RegisterId, Immediate12) = OP_SRLI,
+    SRLI(RegisterId, RegisterId, Immediate12),
 
     /// Subtracts two registers.
     ///
@@ -412,7 +412,7 @@ pub enum Opcode {
     /// high byte of a 128-bit register.
     ///
     /// `$err` is cleared.
-    SUB(RegisterId, RegisterId, RegisterId) = OP_SUB,
+    SUB(RegisterId, RegisterId, RegisterId),
 
     /// Subtracts a register and an immediate value.
     ///
@@ -429,7 +429,7 @@ pub enum Opcode {
     /// high byte of a 128-bit register.
     ///
     /// `$err` is cleared.
-    SUBI(RegisterId, RegisterId, Immediate12) = OP_SUBI,
+    SUBI(RegisterId, RegisterId, Immediate12),
 
     /// Bitwise XORs two registers.
     ///
@@ -443,7 +443,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    XOR(RegisterId, RegisterId, RegisterId) = OP_XOR,
+    XOR(RegisterId, RegisterId, RegisterId),
 
     /// Bitwise XORs a register and an immediate value.
     ///
@@ -457,7 +457,7 @@ pub enum Opcode {
     ///
     /// #### Execution
     /// `$of` and `$err` are cleared.
-    XORI(RegisterId, RegisterId, Immediate12) = OP_XORI,
+    XORI(RegisterId, RegisterId, Immediate12),
 
     /// Set `$rA` to `true` if the `$rC <= tx.input[$rB].maturity`.
     ///
@@ -476,7 +476,7 @@ pub enum Opcode {
     /// Otherwise, advance the program counter `$pc` by `4`.
     ///
     /// See also: [BIP-112](https://github.com/bitcoin/bips/blob/master/bip-0112.mediawiki) and [CLTV](#cltv-check-lock-time-verify).
-    CIMV(RegisterId, RegisterId, RegisterId) = OP_CIMV,
+    CIMV(RegisterId, RegisterId, RegisterId),
 
     /// Set `$rA` to `true` if `$rB <= tx.maturity`.
     ///
@@ -492,7 +492,7 @@ pub enum Opcode {
     /// Otherwise, advance the program counter `$pc` by `4`.
     ///
     /// See also: [BIP-65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) and [Bitcoin's Time Locks](https://prestwi.ch/bitcoin-time-locks).
-    CTMV(RegisterId, RegisterId) = OP_CTMV,
+    CTMV(RegisterId, RegisterId),
 
     /// Jumps to the code instruction offset by `imm`.
     ///
@@ -502,7 +502,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$is + imm * 4 > VM_MAX_RAM - 1`
-    JI(Immediate24) = OP_JI,
+    JI(Immediate24),
 
     /// Jump to the code instruction offset by `imm` if `$rA` is not equal to
     /// `$rB`.
@@ -513,7 +513,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$is + imm * 4 > VM_MAX_RAM - 1`
-    JNEI(RegisterId, RegisterId, Immediate12) = OP_JNEI,
+    JNEI(RegisterId, RegisterId, Immediate12),
 
     /// Returns from [context](./main.md#contexts) with value `$rA`.
     ///
@@ -533,7 +533,7 @@ pub enum Opcode {
     /// `$cgas`. Afterwards, set the following registers:
     ///
     /// 1. `$pc = $pc + 4` (advance program counter from where we called)
-    RET(RegisterId) = OP_RET,
+    RET(RegisterId),
 
     /// Extend the current call frame's stack by an immediate value.
     ///
@@ -545,7 +545,7 @@ pub enum Opcode {
     /// #### Panics
     /// - `$sp + imm` overflows
     /// - `$sp + imm > $hp`
-    CFEI(Immediate24) = OP_CFEI,
+    CFEI(Immediate24),
 
     /// Shrink the current call frame's stack by an immediate value.
     ///
@@ -557,7 +557,7 @@ pub enum Opcode {
     /// #### Panics
     /// - `$sp - imm` underflows
     /// - `$sp - imm < $ssp`
-    CFSI(Immediate24) = OP_CFSI,
+    CFSI(Immediate24),
 
     /// A byte is loaded from the specified address offset by `imm`.
     ///
@@ -569,7 +569,7 @@ pub enum Opcode {
     /// - `$rA` is a [reserved register](./main.md#semantics)
     /// - `$rB + imm + 1` overflows
     /// - `$rB + imm + 1 > VM_MAX_RAM`
-    LB(RegisterId, RegisterId, Immediate12) = OP_LB,
+    LB(RegisterId, RegisterId, Immediate12),
 
     /// A word is loaded from the specified address offset by `imm`.
     /// | Operation   | ```$rA = MEM[$rB + imm, 8];```
@@ -580,7 +580,7 @@ pub enum Opcode {
     /// - `$rA` is a [reserved register](./main.md#semantics)
     /// - `$rB + imm + 8` overflows
     /// - `$rB + imm + 8 > VM_MAX_RAM`
-    LW(RegisterId, RegisterId, Immediate12) = OP_LW,
+    LW(RegisterId, RegisterId, Immediate12),
 
     /// Allocate a number of bytes from the heap.
     ///
@@ -592,7 +592,7 @@ pub enum Opcode {
     /// #### Panics
     /// - `$hp - $rA` underflows
     /// - `$hp - $rA < $sp`
-    ALOC(RegisterId) = OP_ALOC,
+    ALOC(RegisterId),
 
     /// Clear bytes in memory.
     ///
@@ -606,7 +606,7 @@ pub enum Opcode {
     /// - `$rB > MEM_MAX_ACCESS_SIZE`
     /// - The memory range `MEM[$rA, $rB]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    MCL(RegisterId, RegisterId) = OP_MCL,
+    MCL(RegisterId, RegisterId),
 
     /// Clear bytes in memory.
     ///
@@ -620,7 +620,7 @@ pub enum Opcode {
     /// - `imm > MEM_MAX_ACCESS_SIZE`
     /// - The memory range `MEM[$rA, imm]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    MCLI(RegisterId, Immediate18) = OP_MCLI,
+    MCLI(RegisterId, Immediate18),
 
     /// Copy bytes in memory.
     ///
@@ -637,7 +637,7 @@ pub enum Opcode {
     /// - The memory ranges `MEM[$rA, $rC]` and `MEM[$rB, $rC]` overlap
     /// - The memory range `MEM[$rA, $rC]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    MCP(RegisterId, RegisterId, RegisterId) = OP_MCP,
+    MCP(RegisterId, RegisterId, RegisterId),
 
     /// Compare bytes in memory.
     ///
@@ -652,7 +652,7 @@ pub enum Opcode {
     /// - `$rB + $rD > VM_MAX_RAM`
     /// - `$rC + $rD > VM_MAX_RAM`
     /// - `$rD > MEM_MAX_ACCESS_SIZE`
-    MEQ(RegisterId, RegisterId, RegisterId, RegisterId) = OP_MEQ,
+    MEQ(RegisterId, RegisterId, RegisterId, RegisterId),
 
     /// The least significant byte of `$rB` is stored at the address `$rA`
     /// offset by `imm`.
@@ -666,7 +666,7 @@ pub enum Opcode {
     /// - `$rA + imm + 1 > VM_MAX_RAM`
     /// - The memory range `MEM[$rA + imm, 1]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    SB(RegisterId, RegisterId, Immediate12) = OP_SB,
+    SB(RegisterId, RegisterId, Immediate12),
 
     /// The value of `$rB` is stored at the address `$rA` offset by `imm`.
     ///
@@ -679,7 +679,7 @@ pub enum Opcode {
     /// - `$rA + imm + 8 > VM_MAX_RAM`
     /// - The memory range `MEM[$rA + imm, 8]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    SW(RegisterId, RegisterId, Immediate12) = OP_SW,
+    SW(RegisterId, RegisterId, Immediate12),
 
     /// Get block header hash.
     ///
@@ -695,7 +695,7 @@ pub enum Opcode {
     ///
     /// Block header hashes for blocks with height greater than or equal to
     /// current block height are zero (`0x00**32`).
-    BHSH(RegisterId, RegisterId) = OP_BHSH,
+    BHSH(RegisterId, RegisterId),
 
     /// Get Fuel block height.
     ///
@@ -705,7 +705,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$rA` is a [reserved register](./main.md#semantics)
-    BHEI(RegisterId) = OP_BHEI,
+    BHEI(RegisterId),
 
     /// Burn `$rA` coins of the current contract's color.
     ///
@@ -722,7 +722,7 @@ pub enum Opcode {
     /// `MEM[$fp, 32]` by `$rA`.
     ///
     /// This modifies the `balanceRoot` field of the appropriate output.
-    BURN(RegisterId) = OP_BURN,
+    BURN(RegisterId),
 
     /// Call contract.
     ///
@@ -763,7 +763,7 @@ pub enum Opcode {
     /// 1. `$cgas = $rD` or all available gas (forward gas)
     ///
     /// This modifies the `balanceRoot` field of the appropriate output(s).
-    CALL(RegisterId, RegisterId, RegisterId, RegisterId) = OP_CALL,
+    CALL(RegisterId, RegisterId, RegisterId, RegisterId),
 
     /// Copy `$rD` bytes of code starting at `$rC` for contract with ID equal to
     /// the 32 bytes in memory starting at `$rB` into memory starting at `$rA`.
@@ -783,7 +783,7 @@ pub enum Opcode {
     ///   check](./main.md#ownership)
     /// - `$rD > MEM_MAX_ACCESS_SIZE`
     /// - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
-    CCP(RegisterId, RegisterId, RegisterId, RegisterId) = OP_CCP,
+    CCP(RegisterId, RegisterId, RegisterId, RegisterId),
 
     /// Set the 32 bytes in memory starting at `$rA` to the code root for
     /// contract with ID equal to the 32 bytes in memory starting at `$rB`.
@@ -803,7 +803,7 @@ pub enum Opcode {
     ///
     /// Code root compuration is defined
     /// [here](../protocol/identifiers.md#contract-id).
-    CROO(RegisterId, RegisterId) = OP_CROO,
+    CROO(RegisterId, RegisterId),
 
     /// Set `$rA` to the size of the code for contract with ID equal to the 32
     /// bytes in memory starting at `$rB`.
@@ -817,7 +817,7 @@ pub enum Opcode {
     /// - `$rB + 32` overflows
     /// - `$rB + 32 > VM_MAX_RAM`
     /// - Contract with ID `MEM[$rB, 32]` is not in `tx.inputs`
-    CSIZ(RegisterId, RegisterId) = OP_CSIZ,
+    CSIZ(RegisterId, RegisterId),
 
     /// Get block proposer address.
     ///
@@ -830,7 +830,7 @@ pub enum Opcode {
     /// - `$rA + 32 > VM_MAX_RAM`
     /// - The memory range `MEM[$rA, 32]`  does not pass [ownership
     ///   check](./main.md#ownership)
-    CB(RegisterId) = OP_CB,
+    CB(RegisterId),
 
     /// Copy `$rC` bytes of code starting at `$rB` for contract with ID equal to
     /// the 32 bytes in memory starting at `$rA` into memory starting at `$ssp`.
@@ -858,14 +858,14 @@ pub enum Opcode {
     /// This opcode can be used to concatenate the code of multiple contracts
     /// together. It can only be used when the stack area of the call frame is
     /// unused (i.e. prior to being used).
-    LDC(RegisterId, RegisterId, RegisterId) = OP_LDC,
+    LDC(RegisterId, RegisterId, RegisterId),
 
     /// Log an event. This is a no-op.
     ///
     /// | Operation   | ```log($rA, $rB, $rC, $rD);``` |
     /// | Syntax      | `log $rA, $rB, $rC, $rD`       |
     /// | Encoding    | `0x00 rA rB rC rD`             |
-    LOG(RegisterId, RegisterId, RegisterId, RegisterId) = OP_LOG,
+    LOG(RegisterId, RegisterId, RegisterId, RegisterId),
 
     /// Mint `$rA` coins of the current contract's color.
     ///
@@ -882,7 +882,7 @@ pub enum Opcode {
     /// `MEM[$fp, 32]` by `$rA`.
     ///
     /// This modifies the `balanceRoot` field of the appropriate output.
-    MINT(RegisterId) = OP_MINT,
+    MINT(RegisterId),
 
     /// Halt execution, reverting state changes and returning value in `$rA`.
     ///
@@ -899,7 +899,7 @@ pub enum Opcode {
     /// 1. All [OutputContractConditional](../protocol/tx_format.md#
     /// outputcontractconditional) outputs will have `contractID`, `amount`, and
     /// `stateRoot` of zero.
-    RVRT(RegisterId) = OP_RVRT,
+    RVRT(RegisterId),
 
     /// Copy `$rC` bytes of code starting at `$rB` for contract with static
     /// index `$rA` into memory starting at `$ssp`.
@@ -928,7 +928,7 @@ pub enum Opcode {
     /// This opcode can be used to concatenate the code of multiple contracts
     /// together. It can only be used when the stack area of the call frame is
     /// unused (i.e. prior to being used).
-    SLDC(RegisterId, RegisterId, RegisterId) = OP_SLDC,
+    SLDC(RegisterId, RegisterId, RegisterId),
 
     /// A word is read from the current contract's state.
     ///
@@ -942,7 +942,7 @@ pub enum Opcode {
     /// - `$rB + 32` overflows
     /// - `$rB + 32 > VM_MAX_RAM`
     /// - `$fp == 0` (in the script context)
-    SRW(RegisterId, RegisterId) = OP_SRW,
+    SRW(RegisterId, RegisterId),
 
     /// 32 bytes is read from the current contract's state.
     ///
@@ -959,7 +959,7 @@ pub enum Opcode {
     /// - The memory range `MEM[$rA, 32]`  does not pass [ownership
     ///   check](./main.md#ownership)
     /// - `$fp == 0` (in the script context)
-    SRWQ(RegisterId, RegisterId) = OP_SRWQ,
+    SRWQ(RegisterId, RegisterId),
 
     /// A word is written to the current contract's state.
     ///
@@ -971,7 +971,7 @@ pub enum Opcode {
     /// - `$rA + 32` overflows
     /// - `$rA + 32 > VM_MAX_RAM`
     /// - `$fp == 0` (in the script context)
-    SWW(RegisterId, RegisterId) = OP_SWW,
+    SWW(RegisterId, RegisterId),
 
     /// 32 bytes is written to the current contract's state.
     ///
@@ -985,7 +985,7 @@ pub enum Opcode {
     /// - `$rA + 32 > VM_MAX_RAM`
     /// - `$rB + 32 > VM_MAX_RAM`
     /// - `$fp == 0` (in the script context)
-    SWWQ(RegisterId, RegisterId) = OP_SWWQ,
+    SWWQ(RegisterId, RegisterId),
 
     /// Transfer `$rB` coins with color at `$rC` to contract with ID at `$rA`.
     ///
@@ -1014,7 +1014,7 @@ pub enum Opcode {
     /// `MEM[$fp, 32]` by `$rB`.
     ///
     /// This modifies the `balanceRoot` field of the appropriate output(s).
-    TR(RegisterId, RegisterId, RegisterId) = OP_TR,
+    TR(RegisterId, RegisterId, RegisterId),
 
     /// Transfer `$rC` coins with color at `$rD` to address at `$rA`, with
     /// output `$rB`. | Operation   | ```transferout(MEM[$rA, 32], $rB, $rC,
@@ -1046,7 +1046,7 @@ pub enum Opcode {
     /// - `tx.outputs[$rB].color = MEM[$rD, 32]`
     ///
     /// This modifies the `balanceRoot` field of the appropriate output(s).
-    TRO(RegisterId, RegisterId, RegisterId, RegisterId) = OP_TRO,
+    TRO(RegisterId, RegisterId, RegisterId, RegisterId),
 
     /// The 64-byte public key (x, y) recovered from 64-byte
     /// signature starting at `$rB` on 32-byte message hash starting at `$rC`. |
@@ -1067,7 +1067,7 @@ pub enum Opcode {
     ///
     /// To get the address, hash the public key with
     /// [SHA-2-256](#sha256-sha-2-256).
-    ECR(RegisterId, RegisterId, RegisterId) = OP_ECR,
+    ECR(RegisterId, RegisterId, RegisterId),
 
     /// The keccak-256 hash of `$rC` bytes starting at `$rB`.
     ///
@@ -1083,7 +1083,7 @@ pub enum Opcode {
     /// - The memory range `MEM[$rA, 32]`  does not pass [ownership
     ///   check](./main.md#ownership)
     /// - `$rC > MEM_MAX_ACCESS_SIZE`
-    K256(RegisterId, RegisterId, RegisterId) = OP_K256,
+    K256(RegisterId, RegisterId, RegisterId),
 
     /// The SHA-2-256 hash of `$rC` bytes starting at `$rB`.
     ///
@@ -1099,7 +1099,7 @@ pub enum Opcode {
     /// - The memory range `MEM[$rA, 32]`  does not pass [ownership
     ///   check](./main.md#ownership)
     /// - `$rC > MEM_MAX_ACCESS_SIZE`
-    S256(RegisterId, RegisterId, RegisterId) = OP_S256,
+    S256(RegisterId, RegisterId, RegisterId),
 
     /// Set `$rA` to the length in bytes of [the `$rB`th
     /// input](./main.md#vm-initialization).
@@ -1110,7 +1110,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$rB >= tx.inputsCount`
-    XIL(RegisterId, RegisterId) = OP_XIL,
+    XIL(RegisterId, RegisterId),
 
     /// Set `$rA` to the memory addess of the start of [the `$rB`th
     /// input](./main.md#vm-initialization).
@@ -1121,7 +1121,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$rB >= tx.inputsCount`
-    XIS(RegisterId, RegisterId) = OP_XIS,
+    XIS(RegisterId, RegisterId),
 
     /// Set `$rA` to the length in bytes of [the `$rB`th
     /// output](./main.md#vm-initialization).
@@ -1132,7 +1132,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$rB >= tx.outputsCount`
-    XOL(RegisterId, RegisterId) = OP_XOL,
+    XOL(RegisterId, RegisterId),
 
     /// Set `$rA` to the memory addess of the start of [the `$rB`th
     /// output](./main.md#vm-initialization).
@@ -1143,7 +1143,7 @@ pub enum Opcode {
     ///
     /// #### Panics
     /// - `$rB >= tx.outputsCount`
-    XOS(RegisterId, RegisterId) = OP_XOS,
+    XOS(RegisterId, RegisterId),
 
     /// Set `$rA` to the length in bytes of [the `$rB`th
     /// witness](./main.md#vm-initialization).
@@ -1158,7 +1158,7 @@ pub enum Opcode {
     /// Note that the returned length includes the [_entire_
     /// witness](../protocol/tx_format.md), not just of the witness's `data`
     /// field.
-    XWL(RegisterId, RegisterId) = OP_XWL,
+    XWL(RegisterId, RegisterId),
 
     /// Set `$rA` to the memory addess of the start of [the `$rB`th
     /// witness](./main.md#vm-initialization).
@@ -1173,7 +1173,7 @@ pub enum Opcode {
     /// Note that the returned memory address includes the [_entire_
     /// witness](../protocol/tx_format.md), not just of the witness's `data`
     /// field.
-    XWS(RegisterId, RegisterId) = OP_XWS,
+    XWS(RegisterId, RegisterId),
 
     /// Performs no operation.
     ///
@@ -1182,17 +1182,17 @@ pub enum Opcode {
     /// | Encoding    | `0x00 - - - -`         |
     ///
     /// `$of` and `$err` are cleared.
-    NOOP = OP_NOOP,
+    NOOP,
 
     /// Set `$flag` to `$rA`.
     ///
     /// | Operation   | ```$flag = $rA;```    |
     /// | Syntax      | `flag $rA`            |
     /// | Encoding    | `0x00 rA - - -`       |
-    FLAG(RegisterId) = OP_FLAG,
+    FLAG(RegisterId),
 
     /// Undefined opcode, potentially from inconsistent serialization
-    Undefined = 0x0f,
+    Undefined,
 }
 
 impl Opcode {
