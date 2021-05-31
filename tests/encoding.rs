@@ -117,13 +117,10 @@ fn opcode() {
         }
 
         // Assert no panic with checked function
-        loop {
+        while !op_bytes.is_empty() {
             op_bytes.pop();
-            assert!(Opcode::from_bytes(op_bytes.as_slice()).is_err());
 
-            if op_bytes.is_empty() {
-                break;
-            }
+            assert!(Opcode::from_bytes(op_bytes.as_slice()).is_err());
         }
     }
 
