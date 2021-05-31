@@ -99,15 +99,21 @@ fn opcode() {
         let op_p = Opcode::from(op_p);
         let op_q = Opcode::from_bytes_unchecked(op_bytes.as_slice());
 
-        let mut op_bytes = op.to_bytes().to_vec();
+        assert_eq!(op, op_p);
+        assert_eq!(op, op_q);
 
-        let op_r = Opcode::from_bytes_unchecked(op_bytes.as_slice());
-        let op_s = Opcode::from_bytes(op_bytes.as_slice()).expect("Failed to safely generate op from bytes!");
+        let mut op_bytes = op.to_bytes().to_vec();
 
         // Assert opcode can be created from big slices
         op_bytes.extend_from_slice(&[0xff; 25]);
         while op_bytes.len() > Opcode::BYTES_SIZE {
             op_bytes.pop();
+
+            let op_r = Opcode::from_bytes_unchecked(op_bytes.as_slice());
+            let op_s = Opcode::from_bytes(op_bytes.as_slice()).expect("Failed to safely generate op from bytes!");
+
+            assert_eq!(op, op_r);
+            assert_eq!(op, op_s);
         }
 
         // Assert no panic with checked function
@@ -119,11 +125,6 @@ fn opcode() {
                 break;
             }
         }
-
-        assert_eq!(op, op_p);
-        assert_eq!(op, op_q);
-        assert_eq!(op, op_r);
-        assert_eq!(op, op_s);
     }
 
     let mut op_p = Opcode::Undefined;
