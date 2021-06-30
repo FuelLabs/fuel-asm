@@ -1,9 +1,8 @@
 use crate::types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId};
-
 use consts::*;
 
 use std::convert::TryFrom;
-use std::io;
+use std::{io, iter};
 
 pub mod consts;
 
@@ -1846,5 +1845,14 @@ impl io::Write for Opcode {
 
     fn flush(&mut self) -> io::Result<()> {
         Ok(())
+    }
+}
+
+impl iter::FromIterator<Opcode> for Vec<u8> {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = Opcode>,
+    {
+        iter.into_iter().map(Opcode::to_bytes).flatten().collect()
     }
 }
