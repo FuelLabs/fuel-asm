@@ -52,7 +52,7 @@ jobs:
       uses: actions-rs/cargo@v1
       with:
         command: build
-        args: --verbose --target thumbv6m-none-eabi --no-default-feature
+        args: --verbose --target thumbv6m-none-eabi --no-default-features
 
     - name: Run tests
       uses: actions-rs/cargo@v1
