@@ -9,7 +9,10 @@ use std::{io, iter};
 pub mod consts;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "serde-types", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(
+    any(feature = "serde-types", feature = "serde-types-default"),
+    derive(serde::Serialize, serde::Deserialize)
+)]
 /// Instruction representation for the interpreter.
 ///
 /// ## Memory Opcodes
