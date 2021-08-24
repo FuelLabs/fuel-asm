@@ -1,7 +1,9 @@
 use crate::types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId};
 use consts::*;
 
-use std::convert::TryFrom;
+use core::convert::TryFrom;
+
+#[cfg(feature = "std")]
 use std::{io, iter};
 
 pub mod consts;
@@ -1332,27 +1334,6 @@ impl Opcode {
         u32::from(self).to_be_bytes()
     }
 
-    /// Create a `Opcode` from a slice of bytes
-    ///
-    /// This function will fail if the length of the bytes is smaller than
-    /// [`Opcode::BYTES_SIZE`].
-    pub fn from_bytes(bytes: &[u8]) -> io::Result<Self> {
-        if bytes.len() < Self::BYTES_SIZE {
-            Err(io::Error::new(
-                io::ErrorKind::UnexpectedEof,
-                "The provided buffer is not big enough!",
-            ))
-        } else {
-            Ok(Self::from_bytes_unchecked(bytes))
-        }
-    }
-
-    /// Gas cost for this operation
-    pub const fn gas_cost(&self) -> u64 {
-        // TODO define gas costs
-        1
-    }
-
     /// Transform the [`Opcode`] into an optional array of 4 register
     /// identifiers
     pub const fn registers(&self) -> [Option<RegisterId>; 4] {
@@ -1434,6 +1415,24 @@ impl Opcode {
             Self::NOOP => [None; 4],
             Self::FLAG(ra) => [Some(*ra), None, None, None],
             Self::Undefined => [None; 4],
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl Opcode {
+    /// Create a `Opcode` from a slice of bytes
+    ///
+    /// This function will fail if the length of the bytes is smaller than
+    /// [`Opcode::BYTES_SIZE`].
+    pub fn from_bytes(bytes: &[u8]) -> io::Result<Self> {
+        if bytes.len() < Self::BYTES_SIZE {
+            Err(io::Error::new(
+                io::ErrorKind::UnexpectedEof,
+                "The provided buffer is not big enough!",
+            ))
+        } else {
+            Ok(Self::from_bytes_unchecked(bytes))
         }
     }
 }
@@ -1814,6 +1813,7 @@ impl From<Opcode> for u32 {
     }
 }
 
+#[cfg(feature = "std")]
 impl io::Read for Opcode {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         buf.chunks_exact_mut(4)
@@ -1829,6 +1829,7 @@ impl io::Read for Opcode {
     }
 }
 
+#[cfg(feature = "std")]
 impl io::Write for Opcode {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         buf.chunks_exact(4)
@@ -1848,6 +1849,7 @@ impl io::Write for Opcode {
     }
 }
 
+#[cfg(feature = "std")]
 impl iter::FromIterator<Opcode> for Vec<u8> {
     fn from_iter<T>(iter: T) -> Self
     where
