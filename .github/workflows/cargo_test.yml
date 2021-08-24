@@ -29,8 +29,8 @@ jobs:
     - name: Install toolchain no-std
       uses: actions-rs/toolchain@v1
       with:
-        profile: minimal
-        toolchain: thumbv6m-none-eabi
+        toolchain: stable
+        target: thumbv6m-none-eabi
         override: true
 
     - name: Install rustfmt
