@@ -10,15 +10,24 @@ use crate::opcode::consts::OpcodeRepr;
 /// A version of Opcode that can used without unnecessary branching
 #[derive(Debug, Clone, Copy)]
 pub struct ParsedOpcode {
-    pub(super) op: u8,
-    pub(super) ra: RegisterId,
-    pub(super) rb: RegisterId,
-    pub(super) rc: RegisterId,
-    pub(super) rd: RegisterId,
-    pub(super) _imm06: Immediate06,
-    pub(super) imm12: Immediate12,
-    pub(super) imm18: Immediate18,
-    pub(super) imm24: Immediate24,
+    /// Opcode
+    pub op: u8,
+    /// Register A
+    pub ra: RegisterId,
+    /// Register B
+    pub rb: RegisterId,
+    /// Register C
+    pub rc: RegisterId,
+    /// Register D
+    pub rd: RegisterId,
+    /// Immediate with 6 bits
+    pub imm06: Immediate06,
+    /// Immediate with 12 bits
+    pub imm12: Immediate12,
+    /// Immediate with 18 bits
+    pub imm18: Immediate18,
+    /// Immediate with 24 bits
+    pub imm24: Immediate24,
 }
 
 impl ParsedOpcode {
@@ -67,7 +76,7 @@ impl From<u32> for ParsedOpcode {
         let rc = ((instruction >> 6) & 0x3f) as RegisterId;
         let rd = (instruction & 0x3f) as RegisterId;
 
-        let _imm06 = (instruction & 0xff) as Immediate06;
+        let imm06 = (instruction & 0xff) as Immediate06;
         let imm12 = (instruction & 0x0fff) as Immediate12;
         let imm18 = (instruction & 0x3ffff) as Immediate18;
         let imm24 = (instruction & 0xffffff) as Immediate24;
@@ -78,7 +87,7 @@ impl From<u32> for ParsedOpcode {
             rb,
             rc,
             rd,
-            _imm06,
+            imm06,
             imm12,
             imm18,
             imm24,

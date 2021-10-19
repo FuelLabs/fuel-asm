@@ -1265,7 +1265,7 @@ impl Opcode {
             rb,
             rc,
             rd,
-            _imm06: _,
+            imm06: _,
             imm12,
             imm18,
             imm24,
