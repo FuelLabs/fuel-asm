@@ -1,5 +1,6 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-#[allow(non_camel_case_types)]
+#[allow(non_camel_case_types, clippy::upper_case_acronyms)]
+#[repr(u8)]
 pub enum OpcodeRepr {
     ADD = 0x10,
     ADDI = 0x11,
