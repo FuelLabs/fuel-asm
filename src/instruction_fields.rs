@@ -69,8 +69,9 @@ impl InstructionFields {
     /// The caller must ensure that the slice is has at least `Self::LEN` bytes.
     pub unsafe fn from_slice_unchecked(buf: &[u8]) -> Self {
         debug_assert!(buf.len() >= 4);
-        let arr: [u8; Self::LEN] = fuel_types::bytes::from_slice_unchecked(buf);
-        Self::from(u32::from_be_bytes(arr))
+        let instr = fuel_types::bytes::from_slice_unchecked(buf);
+        let instr = u32::from_be_bytes(instr);
+        Self::from(instr)
     }
 
     /// Convert the opcode to bytes representation
