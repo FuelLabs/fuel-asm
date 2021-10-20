@@ -67,47 +67,47 @@ impl Instruction {
     }
 
     /// Opcode
-    pub const fn op(self) -> u8 {
+    pub const fn op(&self) -> u8 {
         self.op
     }
 
     /// Register A
-    pub const fn ra(self) -> RegisterId {
+    pub const fn ra(&self) -> RegisterId {
         self.ra
     }
 
     /// Register B
-    pub const fn rb(self) -> RegisterId {
+    pub const fn rb(&self) -> RegisterId {
         self.rb
     }
 
     /// Register C
-    pub const fn rc(self) -> RegisterId {
+    pub const fn rc(&self) -> RegisterId {
         self.rc
     }
 
     /// Register D
-    pub const fn rd(self) -> RegisterId {
+    pub const fn rd(&self) -> RegisterId {
         self.rd
     }
 
     /// Immediate with 6 bits
-    pub const fn imm06(self) -> Immediate06 {
+    pub const fn imm06(&self) -> Immediate06 {
         self.imm06
     }
 
     /// Immediate with 12 bits
-    pub const fn imm12(self) -> Immediate12 {
+    pub const fn imm12(&self) -> Immediate12 {
         self.imm12
     }
 
     /// Immediate with 18 bits
-    pub const fn imm18(self) -> Immediate18 {
+    pub const fn imm18(&self) -> Immediate18 {
         self.imm18
     }
 
     /// Immediate with 24 bits
-    pub const fn imm24(self) -> Immediate24 {
+    pub const fn imm24(&self) -> Immediate24 {
         self.imm24
     }
 
