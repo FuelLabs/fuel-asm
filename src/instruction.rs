@@ -9,23 +9,23 @@ use crate::opcode::consts::OpcodeRepr;
 #[derive(Debug, Clone, Copy)]
 pub struct Instruction {
     /// Opcode
-    pub op: u8,
+    op: u8,
     /// Register A
-    pub ra: RegisterId,
+    ra: RegisterId,
     /// Register B
-    pub rb: RegisterId,
+    rb: RegisterId,
     /// Register C
-    pub rc: RegisterId,
+    rc: RegisterId,
     /// Register D
-    pub rd: RegisterId,
+    rd: RegisterId,
     /// Immediate with 6 bits
-    pub imm06: Immediate06,
+    imm06: Immediate06,
     /// Immediate with 12 bits
-    pub imm12: Immediate12,
+    imm12: Immediate12,
     /// Immediate with 18 bits
-    pub imm18: Immediate18,
+    imm18: Immediate18,
     /// Immediate with 24 bits
-    pub imm24: Immediate24,
+    imm24: Immediate24,
 }
 
 impl Instruction {
@@ -60,6 +60,51 @@ impl Instruction {
             imm18,
             imm24,
         }
+    }
+
+    /// Opcode
+    pub const fn op(self) -> u8 {
+        self.op
+    }
+
+    /// Register A
+    pub const fn ra(self) -> RegisterId {
+        self.ra
+    }
+
+    /// Register B
+    pub const fn rb(self) -> RegisterId {
+        self.rb
+    }
+
+    /// Register C
+    pub const fn rc(self) -> RegisterId {
+        self.rc
+    }
+
+    /// Register D
+    pub const fn rd(self) -> RegisterId {
+        self.rd
+    }
+
+    /// Immediate with 6 bits
+    pub const fn imm06(self) -> Immediate06 {
+        self.imm06
+    }
+
+    /// Immediate with 12 bits
+    pub const fn imm12(self) -> Immediate12 {
+        self.imm12
+    }
+
+    /// Immediate with 18 bits
+    pub const fn imm18(self) -> Immediate18 {
+        self.imm18
+    }
+
+    /// Immediate with 24 bits
+    pub const fn imm24(self) -> Immediate24 {
+        self.imm24
     }
 
     /// Create a `Instruction` from a slice of bytes

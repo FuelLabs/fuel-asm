@@ -1258,18 +1258,15 @@ impl Opcode {
     pub const BYTES_SIZE: usize = 4;
 
     /// Create a new [`Opcode`] given the internal attributes
-    pub const fn new(internal: Instruction) -> Self {
-        let Instruction {
-            op,
-            ra,
-            rb,
-            rc,
-            rd,
-            imm06: _,
-            imm12,
-            imm18,
-            imm24,
-        } = internal;
+    pub const fn new(instruction: Instruction) -> Self {
+        let op = instruction.op();
+        let ra = instruction.ra();
+        let rb = instruction.rb();
+        let rc = instruction.rc();
+        let rd = instruction.rd();
+        let imm12 = instruction.imm12();
+        let imm18 = instruction.imm18();
+        let imm24 = instruction.imm24();
 
         let op = OpcodeRepr::from_u8(op);
 
