@@ -126,9 +126,9 @@ impl Instruction {
 
     /// Splits a Word into two [`Instruction`] that can be used to construct [`Opcode`]
     pub const fn parse_word(word: Word) -> (Instruction, Instruction) {
-        // Assumes Word is u6
+        // Assumes Word is u64
         // https://doc.rust-lang.org/nightly/reference/expressions/operator-expr.html#numeric-cast4
-        let lo = word as u32;
+        let lo = word as u32; // truncates, see link above
         let hi = (word >> 32) as u32;
 
         (Instruction::new(hi), Instruction::new(lo))
@@ -143,6 +143,9 @@ impl From<u32> for Instruction {
 
 impl From<Instruction> for u32 {
     fn from(parsed: Instruction) -> u32 {
+        // Convert all fields to u32 with correct shifting to just OR together
+        // This truncates the field if they are too large
+
         let a = (parsed.ra as u32) << 18;
         let b = (parsed.rb as u32) << 12;
         let c = (parsed.rc as u32) << 6;
