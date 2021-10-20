@@ -7,7 +7,7 @@ use crate::opcode::consts::OpcodeRepr;
 
 /// A version of Opcode that can used without unnecessary branching
 #[derive(Debug, Clone, Copy)]
-pub struct InstructionFields {
+pub struct Instruction {
     /// Opcode
     pub op: u8,
     /// Register A
@@ -28,7 +28,7 @@ pub struct InstructionFields {
     pub imm24: Immediate24,
 }
 
-impl InstructionFields {
+impl Instruction {
     /// Size of an opcode in bytes
     pub const LEN: usize = 4;
 
@@ -62,7 +62,7 @@ impl InstructionFields {
         }
     }
 
-    /// Create a `InstructionFields` from a slice of bytes
+    /// Create a `Instruction` from a slice of bytes
     ///
     /// # Safety
     ///
@@ -79,24 +79,24 @@ impl InstructionFields {
         u32::from(self).to_be_bytes()
     }
 
-    /// Splits a Word into two [`InstructionFields`] that can be used to construct [`Opcode`]
-    pub const fn parse_word(word: Word) -> (InstructionFields, InstructionFields) {
+    /// Splits a Word into two [`Instruction`] that can be used to construct [`Opcode`]
+    pub const fn parse_word(word: Word) -> (Instruction, Instruction) {
         // Assumes Word is u64
         let lo = word as u32;
         let hi = (word >> 32) as u32;
 
-        (InstructionFields::new(hi), InstructionFields::new(lo))
+        (Instruction::new(hi), Instruction::new(lo))
     }
 }
 
-impl From<u32> for InstructionFields {
+impl From<u32> for Instruction {
     fn from(instruction: u32) -> Self {
         Self::new(instruction)
     }
 }
 
-impl From<InstructionFields> for u32 {
-    fn from(parsed: InstructionFields) -> u32 {
+impl From<Instruction> for u32 {
+    fn from(parsed: Instruction) -> u32 {
         let a = (parsed.ra as u32) << 18;
         let b = (parsed.rb as u32) << 12;
         let c = (parsed.rc as u32) << 6;
@@ -189,11 +189,11 @@ impl From<InstructionFields> for u32 {
 }
 
 #[cfg(feature = "std")]
-impl InstructionFields {
-    /// Create a `InstructionFields` from a slice of bytes
+impl Instruction {
+    /// Create a `Instruction` from a slice of bytes
     ///
     /// This function will fail if the length of the bytes is smaller than
-    /// [`InstructionFields::LEN`].
+    /// [`Instruction::LEN`].
     pub fn from_bytes(bytes: &[u8]) -> io::Result<Self> {
         if bytes.len() < Self::LEN {
             Err(io::Error::new(
