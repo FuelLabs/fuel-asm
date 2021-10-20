@@ -1,7 +1,5 @@
 use fuel_types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
-use core::convert::TryFrom;
-
 #[cfg(feature = "std")]
 use std::io;
 
@@ -34,19 +32,15 @@ impl ParsedOpcode {
     /// Size of an opcode in bytes
     pub const LEN: usize = 4;
 
-    /// Create a `Opcode` from a slice of bytes
+    /// Create a `ParsedOpcode` from a slice of bytes
     ///
-    /// # Panics
+    /// # Safety
     ///
-    /// This function will panic if the length of the bytes is smaller than
-    /// [`Opcode::LEN`].
-    pub fn from_bytes_unchecked(bytes: &[u8]) -> Self {
-        assert!(Self::LEN <= bytes.len());
-
-        <[u8; Self::LEN]>::try_from(&bytes[..Self::LEN])
-            .map(u32::from_be_bytes)
-            .map(Self::from)
-            .unwrap_or_else(|_| unreachable!())
+    /// The caller must ensure that the slice is has at least `Self::LEN` bytes.
+    pub unsafe fn from_slice_unchecked(buf: &[u8]) -> Self {
+        debug_assert!(buf.len() >= 4);
+        let arr: [u8; Self::LEN] = fuel_types::bytes::from_slice_unchecked(buf);
+        Self::from(u32::from_be_bytes(arr))
     }
 
     /// Convert the opcode to bytes representation
@@ -201,7 +195,8 @@ impl ParsedOpcode {
                 "The provided buffer is not big enough!",
             ))
         } else {
-            Ok(Self::from_bytes_unchecked(bytes))
+            // Safety: we check the length above
+            unsafe { Ok(Self::from_slice_unchecked(bytes)) }
         }
     }
 }

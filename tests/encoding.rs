@@ -125,7 +125,7 @@ fn opcode() {
             assert_eq!(op, op_r);
             assert_eq!(op, op_s);
 
-            let ins_r = ParsedOpcode::from_bytes_unchecked(op_bytes.as_slice());
+            let ins_r = unsafe { ParsedOpcode::from_slice_unchecked(op_bytes.as_slice()) };
             let ins_s = ParsedOpcode::from_bytes(op_bytes.as_slice())
                 .expect("Failed to safely generate op from bytes!");
 
