@@ -7,7 +7,7 @@ use consts::*;
 #[cfg(feature = "std")]
 use std::{io, iter};
 
-use crate::ParsedOpcode;
+use crate::InstructionFields;
 
 pub mod consts;
 
@@ -1258,8 +1258,8 @@ impl Opcode {
     pub const BYTES_SIZE: usize = 4;
 
     /// Create a new [`Opcode`] given the internal attributes
-    pub const fn new(internal: ParsedOpcode) -> Self {
-        let ParsedOpcode {
+    pub const fn new(internal: InstructionFields) -> Self {
+        let InstructionFields {
             op,
             ra,
             rb,
@@ -1481,15 +1481,15 @@ impl Opcode {
     }
 }
 
-impl From<ParsedOpcode> for Opcode {
-    fn from(parsed: ParsedOpcode) -> Self {
+impl From<InstructionFields> for Opcode {
+    fn from(parsed: InstructionFields) -> Self {
         Self::new(parsed)
     }
 }
 
 impl From<u32> for Opcode {
     fn from(instruction: u32) -> Self {
-        Self::new(ParsedOpcode::from(instruction))
+        Self::new(InstructionFields::from(instruction))
     }
 }
 

@@ -102,7 +102,7 @@ fn opcode() {
         let op_p = u32::from(op);
         let op_bytes = op_p.to_be_bytes().to_vec();
 
-        let ins = ParsedOpcode::from(op_p);
+        let ins = InstructionFields::from(op_p);
 
         let op_p = Opcode::from(op_p);
         let op_q = Opcode::from_bytes_unchecked(op_bytes.as_slice());
@@ -125,8 +125,8 @@ fn opcode() {
             assert_eq!(op, op_r);
             assert_eq!(op, op_s);
 
-            let ins_r = unsafe { ParsedOpcode::from_slice_unchecked(op_bytes.as_slice()) };
-            let ins_s = ParsedOpcode::from_bytes(op_bytes.as_slice())
+            let ins_r = unsafe { InstructionFields::from_slice_unchecked(op_bytes.as_slice()) };
+            let ins_s = InstructionFields::from_bytes(op_bytes.as_slice())
                 .expect("Failed to safely generate op from bytes!");
 
             assert_eq!(op, Opcode::from(ins_r));

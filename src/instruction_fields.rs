@@ -7,7 +7,7 @@ use crate::opcode::consts::OpcodeRepr;
 
 /// A version of Opcode that can used without unnecessary branching
 #[derive(Debug, Clone, Copy)]
-pub struct ParsedOpcode {
+pub struct InstructionFields {
     /// Opcode
     pub op: u8,
     /// Register A
@@ -28,11 +28,11 @@ pub struct ParsedOpcode {
     pub imm24: Immediate24,
 }
 
-impl ParsedOpcode {
+impl InstructionFields {
     /// Size of an opcode in bytes
     pub const LEN: usize = 4;
 
-    /// Create a `ParsedOpcode` from a slice of bytes
+    /// Create a `InstructionFields` from a slice of bytes
     ///
     /// # Safety
     ///
@@ -48,17 +48,17 @@ impl ParsedOpcode {
         u32::from(self).to_be_bytes()
     }
 
-    /// Splits a Word into two [`ParsedOpcode`] that can be used to construct [`Opcode`]
-    pub fn parse_word(word: Word) -> (ParsedOpcode, ParsedOpcode) {
+    /// Splits a Word into two [`InstructionFields`] that can be used to construct [`Opcode`]
+    pub fn parse_word(word: Word) -> (InstructionFields, InstructionFields) {
         // Assumes Word is u64
         let lo = word as u32;
         let hi = (word >> 32) as u32;
 
-        (ParsedOpcode::from(lo), ParsedOpcode::from(hi))
+        (InstructionFields::from(lo), InstructionFields::from(hi))
     }
 }
 
-impl From<u32> for ParsedOpcode {
+impl From<u32> for InstructionFields {
     fn from(instruction: u32) -> Self {
         // TODO Optimize with native architecture (eg SIMD?) or facilitate
         // auto-vectorization
@@ -89,8 +89,8 @@ impl From<u32> for ParsedOpcode {
     }
 }
 
-impl From<ParsedOpcode> for u32 {
-    fn from(parsed: ParsedOpcode) -> u32 {
+impl From<InstructionFields> for u32 {
+    fn from(parsed: InstructionFields) -> u32 {
         let a = (parsed.ra as u32) << 18;
         let b = (parsed.rb as u32) << 12;
         let c = (parsed.rc as u32) << 6;
@@ -183,11 +183,11 @@ impl From<ParsedOpcode> for u32 {
 }
 
 #[cfg(feature = "std")]
-impl ParsedOpcode {
-    /// Create a `ParsedOpcode` from a slice of bytes
+impl InstructionFields {
+    /// Create a `InstructionFields` from a slice of bytes
     ///
     /// This function will fail if the length of the bytes is smaller than
-    /// [`ParsedOpcode::LEN`].
+    /// [`InstructionFields::LEN`].
     pub fn from_bytes(bytes: &[u8]) -> io::Result<Self> {
         if bytes.len() < Self::LEN {
             Err(io::Error::new(
