@@ -6,7 +6,7 @@ use std::{io, iter};
 use crate::opcode::consts::OpcodeRepr;
 
 /// A version of Opcode that can used without unnecessary branching
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(
     feature = "serde-types-minimal",
     derive(serde::Serialize, serde::Deserialize)
