@@ -90,6 +90,21 @@ fn opcode() {
         Opcode::Undefined,
     ];
 
+    let bytes: Vec<u8> = data.iter().take(16).copied().collect();
+
+    let pairs = bytes.chunks(8).into_iter().map(|chunk| {
+        let mut arr = [0; core::mem::size_of::<Word>()];
+        arr.copy_from_slice(chunk);
+        Instruction::parse_word(Word::from_be_bytes(arr))
+    });
+
+    let result: Vec<Opcode> = pairs
+        .into_iter()
+        .flat_map(|(a, b)| [Opcode::from(a), Opcode::from(b)])
+        .collect();
+
+    assert_eq!(&data[..16], result);
+
     let mut bytes: Vec<u8> = vec![];
     let mut buffer = [0u8; 4];
 
@@ -149,38 +164,4 @@ fn opcode() {
 
         assert_eq!(op, &op_p);
     });
-}
-
-#[test]
-fn instruction_from_iterator() {
-    use fuel_asm::*;
-
-    let r = 0x3f;
-    let imm12 = 0xbff;
-
-    let opcodes = vec![
-        Opcode::ADD(r, r, r),
-        Opcode::ADDI(r, r, imm12),
-        Opcode::AND(r, r, r),
-        Opcode::ANDI(r, r, imm12),
-        Opcode::DIV(r, r, r),
-        Opcode::DIVI(r, r, imm12),
-        Opcode::EQ(r, r, r),
-        Opcode::EXP(r, r, r),
-    ];
-
-    let bytes: Vec<u8> = opcodes.iter().copied().collect();
-
-    let pairs = bytes.chunks(8).into_iter().map(|chunk| {
-        let mut arr = [0; core::mem::size_of::<Word>()];
-        arr.copy_from_slice(chunk);
-        Instruction::parse_word(Word::from_be_bytes(arr))
-    });
-
-    let result: Vec<Opcode> = pairs
-        .into_iter()
-        .flat_map(|(a, b)| [Opcode::from(a), Opcode::from(b)])
-        .collect();
-
-    assert_eq!(opcodes, result);
 }
