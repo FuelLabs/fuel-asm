@@ -1,7 +1,7 @@
 use fuel_types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
 #[cfg(feature = "std")]
-use std::io;
+use std::{io, iter};
 
 use crate::opcode::consts::OpcodeRepr;
 
@@ -204,5 +204,58 @@ impl Instruction {
             // Safety: we check the length above
             unsafe { Ok(Self::from_slice_unchecked(bytes)) }
         }
+    }
+}
+
+#[cfg(feature = "std")]
+impl iter::FromIterator<Instruction> for Vec<u8> {
+    fn from_iter<T>(iter: T) -> Self
+    where
+        T: IntoIterator<Item = Instruction>,
+    {
+        iter.into_iter()
+            .map(Instruction::to_bytes)
+            .flatten()
+            .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use fuel_types::Word;
+
+    use super::Instruction;
+    use crate::Opcode;
+
+    #[test]
+    fn test_from_iterator() {
+        let r = 0x3f;
+        let imm12 = 0xbff;
+
+        let opcodes = vec![
+            Opcode::ADD(r, r, r),
+            Opcode::ADDI(r, r, imm12),
+            Opcode::AND(r, r, r),
+            Opcode::ANDI(r, r, imm12),
+            Opcode::DIV(r, r, r),
+            Opcode::DIVI(r, r, imm12),
+            Opcode::EQ(r, r, r),
+            Opcode::EXP(r, r, r),
+        ];
+
+        let bytes: Vec<u8> = opcodes.iter().copied().collect();
+
+        let pairs = bytes.chunks(8).into_iter().map(|chunk| {
+            let mut arr = [0; core::mem::size_of::<Word>()];
+            arr.copy_from_slice(chunk);
+            Instruction::parse_word(Word::from_be_bytes(arr))
+        });
+
+        let result: Vec<Opcode> = pairs
+            .into_iter()
+            .flat_map(|(a, b)| [Opcode::from(a), Opcode::from(b)])
+            .collect();
+
+        assert_eq!(opcodes, result);
     }
 }
