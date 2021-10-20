@@ -7,6 +7,10 @@ use crate::opcode::consts::OpcodeRepr;
 
 /// A version of Opcode that can used without unnecessary branching
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(
+    feature = "serde-types-minimal",
+    derive(serde::Serialize, serde::Deserialize)
+)]
 pub struct Instruction {
     /// Opcode
     op: u8,
