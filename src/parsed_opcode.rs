@@ -107,85 +107,81 @@ impl From<ParsedOpcode> for u32 {
         let imm24 = parsed.imm24 as u32;
 
         let args = match OpcodeRepr::from_u8(parsed.op) {
-            OpcodeRepr::ADD => a | b | c,
-            OpcodeRepr::ADDI => a | b | imm12,
-            OpcodeRepr::AND => a | b | c,
-            OpcodeRepr::ANDI => a | b | imm12,
-            OpcodeRepr::DIV => a | b | c,
-            OpcodeRepr::DIVI => a | b | imm12,
-            OpcodeRepr::EQ => a | b | c,
-            OpcodeRepr::EXP => a | b | c,
-            OpcodeRepr::EXPI => a | b | imm12,
-            OpcodeRepr::GT => a | b | c,
-            OpcodeRepr::LT => a | b | c,
-            OpcodeRepr::MLOG => a | b | c,
-            OpcodeRepr::MROO => a | b | c,
-            OpcodeRepr::MOD => a | b | c,
-            OpcodeRepr::MODI => a | b | imm12,
-            OpcodeRepr::MOVE => a | b,
-            OpcodeRepr::MUL => a | b | c,
-            OpcodeRepr::MULI => a | b | imm12,
-            OpcodeRepr::NOT => a | b,
-            OpcodeRepr::OR => a | b | c,
-            OpcodeRepr::ORI => a | b | imm12,
-            OpcodeRepr::SLL => a | b | c,
-            OpcodeRepr::SLLI => a | b | imm12,
-            OpcodeRepr::SRL => a | b | c,
-            OpcodeRepr::SRLI => a | b | imm12,
-            OpcodeRepr::SUB => a | b | c,
-            OpcodeRepr::SUBI => a | b | imm12,
-            OpcodeRepr::XOR => a | b | c,
-            OpcodeRepr::XORI => a | b | imm12,
-            OpcodeRepr::CIMV => a | b | c,
-            OpcodeRepr::CTMV => a | b,
-            OpcodeRepr::JI => imm24,
-            OpcodeRepr::JNEI => a | b | imm12,
-            OpcodeRepr::RET => a,
-            OpcodeRepr::RETD => a | b,
-            OpcodeRepr::CFEI => imm24,
-            OpcodeRepr::CFSI => imm24,
-            OpcodeRepr::LB => a | b | imm12,
-            OpcodeRepr::LW => a | b | imm12,
-            OpcodeRepr::ALOC => a,
-            OpcodeRepr::MCL => a | b,
-            OpcodeRepr::MCLI => a | imm18,
-            OpcodeRepr::MCP => a | b | c,
-            OpcodeRepr::MEQ => a | b | c | d,
-            OpcodeRepr::SB => a | b | imm12,
-            OpcodeRepr::SW => a | b | imm12,
-            OpcodeRepr::BHSH => a | b,
-            OpcodeRepr::BHEI => a,
-            OpcodeRepr::BURN => a,
-            OpcodeRepr::CALL => a | b | c | d,
-            OpcodeRepr::CCP => a | b | c | d,
-            OpcodeRepr::CROO => a | b,
-            OpcodeRepr::CSIZ => a | b,
-            OpcodeRepr::CB => a,
-            OpcodeRepr::LDC => a | b | c,
-            OpcodeRepr::LOG => a | b | c | d,
-            OpcodeRepr::LOGD => a | b | c | d,
-            OpcodeRepr::MINT => a,
-            OpcodeRepr::RVRT => a,
-            OpcodeRepr::SLDC => a | b | c,
-            OpcodeRepr::SRW => a | b,
-            OpcodeRepr::SRWQ => a | b,
-            OpcodeRepr::SWW => a | b,
-            OpcodeRepr::SWWQ => a | b,
-            OpcodeRepr::TR => a | b | c,
-            OpcodeRepr::TRO => a | b | c | d,
-            OpcodeRepr::ECR => a | b | c,
-            OpcodeRepr::K256 => a | b | c,
-            OpcodeRepr::S256 => a | b | c,
-            OpcodeRepr::XIL => a | b,
-            OpcodeRepr::XIS => a | b,
-            OpcodeRepr::XOL => a | b,
-            OpcodeRepr::XOS => a | b,
-            OpcodeRepr::XWL => a | b,
-            OpcodeRepr::XWS => a | b,
-            OpcodeRepr::NOOP => 0,
-            OpcodeRepr::FLAG => a,
-            OpcodeRepr::GM => a | imm18,
-            OpcodeRepr::UNDEFINED => 0,
+            OpcodeRepr::ADD
+            | OpcodeRepr::AND
+            | OpcodeRepr::DIV
+            | OpcodeRepr::EQ
+            | OpcodeRepr::EXP
+            | OpcodeRepr::GT
+            | OpcodeRepr::LT
+            | OpcodeRepr::MLOG
+            | OpcodeRepr::MROO
+            | OpcodeRepr::MOD
+            | OpcodeRepr::MUL
+            | OpcodeRepr::OR
+            | OpcodeRepr::SLL
+            | OpcodeRepr::SRL
+            | OpcodeRepr::SUB
+            | OpcodeRepr::XOR
+            | OpcodeRepr::CIMV
+            | OpcodeRepr::MCP
+            | OpcodeRepr::LDC
+            | OpcodeRepr::SLDC
+            | OpcodeRepr::TR
+            | OpcodeRepr::ECR
+            | OpcodeRepr::K256
+            | OpcodeRepr::S256 => a | b | c,
+            OpcodeRepr::ADDI
+            | OpcodeRepr::ANDI
+            | OpcodeRepr::DIVI
+            | OpcodeRepr::EXPI
+            | OpcodeRepr::MODI
+            | OpcodeRepr::MULI
+            | OpcodeRepr::ORI
+            | OpcodeRepr::SLLI
+            | OpcodeRepr::SRLI
+            | OpcodeRepr::SUBI
+            | OpcodeRepr::XORI
+            | OpcodeRepr::JNEI
+            | OpcodeRepr::LB
+            | OpcodeRepr::LW
+            | OpcodeRepr::SB
+            | OpcodeRepr::SW => a | b | imm12,
+            OpcodeRepr::MOVE
+            | OpcodeRepr::NOT
+            | OpcodeRepr::CTMV
+            | OpcodeRepr::RETD
+            | OpcodeRepr::MCL
+            | OpcodeRepr::BHSH
+            | OpcodeRepr::CROO
+            | OpcodeRepr::CSIZ
+            | OpcodeRepr::SRW
+            | OpcodeRepr::SRWQ
+            | OpcodeRepr::SWW
+            | OpcodeRepr::SWWQ
+            | OpcodeRepr::XIL
+            | OpcodeRepr::XIS
+            | OpcodeRepr::XOL
+            | OpcodeRepr::XOS
+            | OpcodeRepr::XWL
+            | OpcodeRepr::XWS => a | b,
+            OpcodeRepr::RET
+            | OpcodeRepr::ALOC
+            | OpcodeRepr::BHEI
+            | OpcodeRepr::BURN
+            | OpcodeRepr::CB
+            | OpcodeRepr::MINT
+            | OpcodeRepr::RVRT
+            | OpcodeRepr::FLAG => a,
+            OpcodeRepr::JI | OpcodeRepr::CFEI | OpcodeRepr::CFSI => imm24,
+            OpcodeRepr::MCLI | OpcodeRepr::GM => a | imm18,
+            OpcodeRepr::MEQ
+            | OpcodeRepr::CALL
+            | OpcodeRepr::CCP
+            | OpcodeRepr::LOG
+            | OpcodeRepr::LOGD
+            | OpcodeRepr::TRO => a | b | c | d,
+            OpcodeRepr::NOOP | OpcodeRepr::UNDEFINED => 0,
         };
 
         ((parsed.op as u32) << 24) | args
