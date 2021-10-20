@@ -88,9 +88,10 @@ fn opcode() {
         Opcode::FLAG(r),
         Opcode::GM(r, imm18),
         Opcode::Undefined,
+        Opcode::Undefined,
     ];
 
-    let bytes: Vec<u8> = data.iter().take(16).copied().collect();
+    let bytes: Vec<u8> = data.iter().copied().collect();
 
     let pairs = bytes.chunks(8).into_iter().map(|chunk| {
         let mut arr = [0; core::mem::size_of::<Word>()];
@@ -103,7 +104,7 @@ fn opcode() {
         .flat_map(|(a, b)| [Opcode::from(a), Opcode::from(b)])
         .collect();
 
-    assert_eq!(&data[..16], result);
+    assert_eq!(data, result);
 
     let mut bytes: Vec<u8> = vec![];
     let mut buffer = [0u8; 4];
