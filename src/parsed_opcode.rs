@@ -31,26 +31,26 @@ pub struct ParsedOpcode {
 }
 
 impl ParsedOpcode {
-    /// Size of the struct when serialized into bytes
-    pub const BYTES_SIZE: usize = 4;
+    /// Size of an opcode in bytes
+    pub const LEN: usize = 4;
 
     /// Create a `Opcode` from a slice of bytes
     ///
     /// # Panics
     ///
     /// This function will panic if the length of the bytes is smaller than
-    /// [`Opcode::BYTES_SIZE`].
+    /// [`Opcode::LEN`].
     pub fn from_bytes_unchecked(bytes: &[u8]) -> Self {
-        assert!(Self::BYTES_SIZE <= bytes.len());
+        assert!(Self::LEN <= bytes.len());
 
-        <[u8; Self::BYTES_SIZE]>::try_from(&bytes[..Self::BYTES_SIZE])
+        <[u8; Self::LEN]>::try_from(&bytes[..Self::LEN])
             .map(u32::from_be_bytes)
             .map(Self::from)
             .unwrap_or_else(|_| unreachable!())
     }
 
     /// Convert the opcode to bytes representation
-    pub fn to_bytes(self) -> [u8; Self::BYTES_SIZE] {
+    pub fn to_bytes(self) -> [u8; Self::LEN] {
         u32::from(self).to_be_bytes()
     }
 
@@ -193,9 +193,9 @@ impl ParsedOpcode {
     /// Create a `ParsedOpcode` from a slice of bytes
     ///
     /// This function will fail if the length of the bytes is smaller than
-    /// [`ParsedOpcode::BYTES_SIZE`].
+    /// [`ParsedOpcode::LEN`].
     pub fn from_bytes(bytes: &[u8]) -> io::Result<Self> {
-        if bytes.len() < Self::BYTES_SIZE {
+        if bytes.len() < Self::LEN {
             Err(io::Error::new(
                 io::ErrorKind::UnexpectedEof,
                 "The provided buffer is not big enough!",
