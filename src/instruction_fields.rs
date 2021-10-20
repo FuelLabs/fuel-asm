@@ -32,34 +32,8 @@ impl InstructionFields {
     /// Size of an opcode in bytes
     pub const LEN: usize = 4;
 
-    /// Create a `InstructionFields` from a slice of bytes
-    ///
-    /// # Safety
-    ///
-    /// The caller must ensure that the slice is has at least `Self::LEN` bytes.
-    pub unsafe fn from_slice_unchecked(buf: &[u8]) -> Self {
-        debug_assert!(buf.len() >= 4);
-        let arr: [u8; Self::LEN] = fuel_types::bytes::from_slice_unchecked(buf);
-        Self::from(u32::from_be_bytes(arr))
-    }
-
-    /// Convert the opcode to bytes representation
-    pub fn to_bytes(self) -> [u8; Self::LEN] {
-        u32::from(self).to_be_bytes()
-    }
-
-    /// Splits a Word into two [`InstructionFields`] that can be used to construct [`Opcode`]
-    pub fn parse_word(word: Word) -> (InstructionFields, InstructionFields) {
-        // Assumes Word is u64
-        let lo = word as u32;
-        let hi = (word >> 32) as u32;
-
-        (InstructionFields::from(lo), InstructionFields::from(hi))
-    }
-}
-
-impl From<u32> for InstructionFields {
-    fn from(instruction: u32) -> Self {
+    /// Extracts fields from a raw instruction
+    pub const fn new(instruction: u32) -> Self {
         // TODO Optimize with native architecture (eg SIMD?) or facilitate
         // auto-vectorization
 
@@ -86,6 +60,37 @@ impl From<u32> for InstructionFields {
             imm18,
             imm24,
         }
+    }
+
+    /// Create a `InstructionFields` from a slice of bytes
+    ///
+    /// # Safety
+    ///
+    /// The caller must ensure that the slice is has at least `Self::LEN` bytes.
+    pub unsafe fn from_slice_unchecked(buf: &[u8]) -> Self {
+        debug_assert!(buf.len() >= 4);
+        let arr: [u8; Self::LEN] = fuel_types::bytes::from_slice_unchecked(buf);
+        Self::from(u32::from_be_bytes(arr))
+    }
+
+    /// Convert the opcode to bytes representation
+    pub fn to_bytes(self) -> [u8; Self::LEN] {
+        u32::from(self).to_be_bytes()
+    }
+
+    /// Splits a Word into two [`InstructionFields`] that can be used to construct [`Opcode`]
+    pub const fn parse_word(word: Word) -> (InstructionFields, InstructionFields) {
+        // Assumes Word is u64
+        let lo = word as u32;
+        let hi = (word >> 32) as u32;
+
+        (InstructionFields::new(hi), InstructionFields::new(lo))
+    }
+}
+
+impl From<u32> for InstructionFields {
+    fn from(instruction: u32) -> Self {
+        Self::new(instruction)
     }
 }
 
