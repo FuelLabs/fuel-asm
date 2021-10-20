@@ -109,8 +109,7 @@ fn opcode() {
     let mut buffer = [0u8; 4];
 
     for mut op in data.clone() {
-        let _ = op
-            .read(&mut buffer)
+        op.read(&mut buffer)
             .expect("Failed to write opcode to buffer");
         bytes.extend(&buffer);
 
@@ -158,8 +157,7 @@ fn opcode() {
 
     let mut op_p = Opcode::Undefined;
     bytes.chunks(4).zip(data.iter()).for_each(|(chunk, op)| {
-        let _ = op_p
-            .write(chunk)
+        op_p.write(chunk)
             .expect("Failed to parse opcode from chunk");
 
         assert_eq!(op, &op_p);
