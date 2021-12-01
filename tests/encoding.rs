@@ -192,7 +192,6 @@ fn opcode() {
 #[test]
 fn panic_reason() {
     let data = vec![
-        PanicReason::Success,
         PanicReason::Revert,
         PanicReason::OutOfGas,
         PanicReason::TransactionValidity,

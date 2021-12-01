@@ -6,8 +6,8 @@
 #[repr(u8)]
 /// Panic reason representation for the interpreter.
 pub enum PanicReason {
-    /// Successful execution.
-    Success = 0x00,
+    /// Representation reserved per protocol.
+    RESERV00 = 0x00,
     /// Found `RVRT` instruction.
     Revert = 0x01,
     /// Execution ran out of gas.
