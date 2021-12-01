@@ -1,5 +1,3 @@
-use core::mem;
-
 /// Byte representation of an opcode
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
@@ -530,20 +528,4 @@ pub enum OpcodeRepr {
     RESERVFE = 0xfe,
     /// RESERVFF
     RESERVFF = 0xff,
-}
-
-impl From<u8> for OpcodeRepr {
-    fn from(b: u8) -> Self {
-        Self::from_u8(b)
-    }
-}
-
-impl OpcodeRepr {
-    /// Const fn implementation of `From<u8>`
-    pub const fn from_u8(b: u8) -> Self {
-        // Currently, the language doesn't support customized type coercion
-        //
-        // Safety: all possible values of `b` are either allocated or reserved
-        unsafe { mem::transmute::<u8, Self>(b) }
-    }
 }

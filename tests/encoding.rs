@@ -223,7 +223,6 @@ fn panic_reason() {
         PanicReason::TransferAmountCannotBeZero,
         PanicReason::ExpectedOutputVariable,
         PanicReason::ExpectedParentInternalContext,
-        PanicReason::InvalidRepresentation,
     ];
 
     for r in data {
