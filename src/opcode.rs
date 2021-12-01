@@ -756,6 +756,9 @@ pub enum Opcode {
     /// - `$rA` is a [reserved register](./main.md#semantics)
     /// - `$rB + 32` overflows
     /// - `$rB + 32 > VM_MAX_RAM`
+    /// - `$rC + 32` overflows
+    /// - `$rC + 32 > VM_MAX_RAM`
+    /// - Contract with ID `MEM[$rC, 32]` is not in `tx.inputs`
     BAL(RegisterId, RegisterId, RegisterId),
 
     /// Get block header hash.
