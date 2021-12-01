@@ -226,9 +226,13 @@ fn panic_reason() {
     ];
 
     for r in data {
+        let b = u8::from(r);
+        let r_p = PanicReason::from(b);
+
         let w = Word::from(r);
-        let r_p = PanicReason::from(w);
+        let r_q = PanicReason::from(w);
 
         assert_eq!(r, r_p);
+        assert_eq!(r, r_q);
     }
 }
