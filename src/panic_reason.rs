@@ -603,7 +603,7 @@ const INSTR_OFFSET: Word = ((WORD_SIZE - mem::size_of::<u32>()) * 8 - 8) as Word
 impl From<InstructionResult> for Word {
     fn from(r: InstructionResult) -> Word {
         let reason = Word::from(r.reason);
-        let instruction = u32::from(r.instruction) as Word;
+        let instruction = (reason != 0) as Word * u32::from(r.instruction) as Word;
 
         (reason << REASON_OFFSET) | (instruction << INSTR_OFFSET)
     }
