@@ -3,7 +3,7 @@
 [![Compile and Test](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml/badge.svg)](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml)
 [![Community](https://img.shields.io/badge/chat%20on-discord-orange?&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xfpK4Pe)
 
-Instruction set for the Fuel VM.
+Instruction set for the [FuelVM](https://github.com/FuelLabs/fuel-specs).
 
 ## Compile features
 
@@ -38,14 +38,14 @@ let restored = Opcode::from_bytes_iter(bytes.iter().copied());
 
 assert_eq!(program, restored);
 
-// Every opcode can be described as `u32` big-endian bytes
+// Every instruction can be described as `u32` big-endian bytes
 let halfwords: Vec<u32> = program.iter().copied().map(u32::from).collect();
 let bytes = halfwords.iter().copied().map(u32::to_be_bytes).flatten();
 let restored = Opcode::from_bytes_iter(bytes);
 
 assert_eq!(program, restored);
 
-// We can also reconstruct the opcodes individually
+// We can also reconstruct the instructions individually
 let restored: Vec<Opcode> = halfwords.iter().copied().map(Opcode::from).collect();
 
 assert_eq!(program, restored);
@@ -62,7 +62,7 @@ assert_eq!(program, restored);
 // Finally, we have [`Instruction`] to allow optimal runtime parsing of the components of the
 // opcode
 //
-// Opcode itself is only but an abstraction/helper to facilitate visualization, but the VM is
+// `Opcode` itself is only but an abstraction/helper to facilitate visualization, but the VM is
 // expected to use raw instructions
 let instrs: Vec<Instruction> = program.iter().copied().map(Instruction::from).collect();
 let restored: Vec<Opcode> = instrs.iter().copied().map(Opcode::from).collect();
