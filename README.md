@@ -1,7 +1,9 @@
 # Fuel ASM
 
-[![Compile and Test](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml/badge.svg)](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml)
-[![Community](https://img.shields.io/badge/chat%20on-discord-orange?&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xfpK4Pe)
+[![build](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml/badge.svg)](https://github.com/FuelLabs/fuel-asm/actions/workflows/cargo_test.yml)
+[![crates.io](https://img.shields.io/crates/v/fuel-asm?label=latest)](https://crates.io/crates/fuel-asm)
+[![docs](https://docs.rs/fuel-asm/badge.svg)](https://docs.rs/fuel-asm/)
+[![discord](https://img.shields.io/badge/chat%20on-discord-orange?&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xfpK4Pe)
 
 Instruction set for the [FuelVM](https://github.com/FuelLabs/fuel-specs).
 
