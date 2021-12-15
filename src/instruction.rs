@@ -11,6 +11,10 @@ use std::{io, iter};
     feature = "serde-types-minimal",
     derive(serde::Serialize, serde::Deserialize)
 )]
+#[cfg_attr(
+    feature = "scale",
+    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
+)]
 pub struct Instruction {
     /// Opcode
     op: u8,
