@@ -1,5 +1,9 @@
 use fuel_types::{bytes, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
+#[cfg(feature = "scale")]
+use scale_codec::{Decode, Encode, Error, Input, Output};
+#[cfg(feature = "scale")]
+use scale_info::{Type, TypeDefPrimitive, TypeInfo};
 #[cfg(feature = "std")]
 use std::{io, iter};
 
@@ -13,10 +17,6 @@ pub use consts::OpcodeRepr;
 #[cfg_attr(
     feature = "serde-types-minimal",
     derive(serde::Serialize, serde::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
 )]
 /// Instruction representation for the interpreter.
 ///
@@ -2030,6 +2030,33 @@ impl From<Opcode> for u32 {
             }
             Opcode::Undefined => (0x00 << 24),
         }
+    }
+}
+
+#[cfg(feature = "scale")]
+impl Encode for Opcode {
+    fn encode_to<T: Output + ?Sized>(&self, dest: &mut T) {
+        let opcode: u32 = (*self).into();
+        opcode.to_be_bytes().encode_to(dest);
+    }
+}
+
+#[cfg(feature = "scale")]
+impl Decode for Opcode {
+    fn decode<I: Input>(input: &mut I) -> Result<Self, Error> {
+        let mut bytes = [0u8; 4];
+        input.read(&mut bytes)?;
+        let opcode = u32::from_be_bytes(bytes);
+        Ok(Opcode::from(opcode))
+    }
+}
+
+#[cfg(feature = "scale")]
+impl TypeInfo for Opcode {
+    type Identity = u32;
+
+    fn type_info() -> Type {
+        TypeDefPrimitive::U32.into()
     }
 }
 

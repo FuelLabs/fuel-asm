@@ -2,6 +2,10 @@ use crate::opcode::{Opcode, OpcodeRepr};
 
 use fuel_types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
+#[cfg(feature = "scale")]
+use scale_codec::{Decode, Encode, Error, Input, Output};
+#[cfg(feature = "scale")]
+use scale_info::{Type, TypeDefPrimitive, TypeInfo};
 #[cfg(feature = "std")]
 use std::{io, iter};
 
@@ -10,10 +14,6 @@ use std::{io, iter};
 #[cfg_attr(
     feature = "serde-types-minimal",
     derive(serde::Serialize, serde::Deserialize)
-)]
-#[cfg_attr(
-    feature = "scale",
-    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
 )]
 pub struct Instruction {
     /// Opcode
@@ -385,5 +385,32 @@ impl iter::FromIterator<Opcode> for Vec<Instruction> {
         T: IntoIterator<Item = Opcode>,
     {
         iter.into_iter().map(Instruction::from).collect()
+    }
+}
+
+#[cfg(feature = "scale")]
+impl Encode for Instruction {
+    fn encode_to<T: Output + ?Sized>(&self, dest: &mut T) {
+        let instruction: u32 = (*self).into();
+        instruction.to_be_bytes().encode_to(dest);
+    }
+}
+
+#[cfg(feature = "scale")]
+impl Decode for Instruction {
+    fn decode<I: Input>(input: &mut I) -> Result<Self, Error> {
+        let mut bytes = [0u8; 4];
+        input.read(&mut bytes)?;
+        let opcode = u32::from_be_bytes(bytes);
+        Ok(Instruction::from(opcode))
+    }
+}
+
+#[cfg(feature = "scale")]
+impl TypeInfo for Instruction {
+    type Identity = u32;
+
+    fn type_info() -> Type {
+        TypeDefPrimitive::U32.into()
     }
 }
