@@ -3,7 +3,7 @@ use crate::opcode::{Opcode, OpcodeRepr};
 use fuel_types::{Immediate06, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
 #[cfg(feature = "scale")]
-use scale_codec::{Decode, Encode, Error, Input, Output};
+use scale_codec::{Decode, Encode, EncodeLike, Error, Input, Output};
 #[cfg(feature = "scale")]
 use scale_info::{Type, TypeDefPrimitive, TypeInfo};
 #[cfg(feature = "std")]
@@ -405,6 +405,9 @@ impl Decode for Instruction {
         Ok(Instruction::from(opcode))
     }
 }
+
+#[cfg(feature = "scale")]
+impl EncodeLike<Instruction> for Instruction {}
 
 #[cfg(feature = "scale")]
 impl TypeInfo for Instruction {

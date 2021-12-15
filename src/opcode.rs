@@ -1,7 +1,7 @@
 use fuel_types::{bytes, Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
 #[cfg(feature = "scale")]
-use scale_codec::{Decode, Encode, Error, Input, Output};
+use scale_codec::{Decode, Encode, EncodeLike, Error, Input, Output};
 #[cfg(feature = "scale")]
 use scale_info::{Type, TypeDefPrimitive, TypeInfo};
 #[cfg(feature = "std")]
@@ -2050,6 +2050,9 @@ impl Decode for Opcode {
         Ok(Opcode::from(opcode))
     }
 }
+
+#[cfg(feature = "scale")]
+impl EncodeLike<Opcode> for Opcode {}
 
 #[cfg(feature = "scale")]
 impl TypeInfo for Opcode {
