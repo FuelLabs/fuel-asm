@@ -120,6 +120,7 @@ impl Instruction {
     /// # Safety
     ///
     /// The caller must ensure that the slice is has at least `Self::LEN` bytes.
+    #[cfg(feature = "std")]
     pub unsafe fn from_slice_unchecked(buf: &[u8]) -> Self {
         debug_assert!(buf.len() >= Self::LEN);
 

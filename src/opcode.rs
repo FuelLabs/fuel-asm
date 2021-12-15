@@ -1,4 +1,6 @@
-use fuel_types::{bytes, Immediate12, Immediate18, Immediate24, RegisterId, Word};
+#[cfg(feature = "std")]
+use fuel_types::bytes;
+use fuel_types::{Immediate12, Immediate18, Immediate24, RegisterId, Word};
 
 #[cfg(feature = "scale")]
 use scale_codec::{Decode, Encode, EncodeLike, Error, Input, Output};
@@ -1399,6 +1401,7 @@ impl Opcode {
     /// # Safety
     ///
     /// Reflects the requirements of [`bytes::from_slice_unchecked`]
+    #[cfg(feature = "std")]
     pub unsafe fn from_bytes_unchecked(bytes: &[u8]) -> Self {
         debug_assert!(Self::LEN <= bytes.len());
 
