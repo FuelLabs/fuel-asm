@@ -8,7 +8,7 @@
 
 ### Improvements
 
-- [#16] Add changelog.
+- [#42] Add changelog.
 
 ### Bugfixes
 
