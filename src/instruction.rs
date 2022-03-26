@@ -48,7 +48,7 @@ impl Instruction {
         let rc = ((instruction >> 6) & 0x3f) as RegisterId;
         let rd = (instruction & 0x3f) as RegisterId;
 
-        let imm06 = (instruction & 0xff) as Immediate06;
+        let imm06 = (instruction & 0x3f) as Immediate06;
         let imm12 = (instruction & 0x0fff) as Immediate12;
         let imm18 = (instruction & 0x3ffff) as Immediate18;
         let imm24 = (instruction & 0xffffff) as Immediate24;
