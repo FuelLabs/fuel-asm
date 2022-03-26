@@ -516,11 +516,11 @@ impl Opcode {
             | Self::LB(_, _, imm)
             | Self::LW(_, _, imm)
             | Self::SB(_, _, imm)
-            | Self::SW(_, _, imm) => Some(*imm as Word),
+            | Self::SW(_, _, imm) => Some(imm.get() as Word),
 
-            Self::MCLI(_, imm) | Self::GM(_, imm) => Some(*imm as Word),
+            Self::MCLI(_, imm) | Self::GM(_, imm) => Some(imm.get() as Word),
 
-            Self::JI(imm) | Self::CFEI(imm) | Self::CFSI(imm) => Some(*imm as Word),
+            Self::JI(imm) | Self::CFEI(imm) | Self::CFSI(imm) => Some(imm.get() as Word),
 
             Self::ADD(_, _, _)
             | Self::AND(_, _, _)
@@ -668,7 +668,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::ADDI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::AND(ra, rb, rc) => {
                 ((OpcodeRepr::AND as u32) << 24)
@@ -680,7 +680,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::ANDI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::DIV(ra, rb, rc) => {
                 ((OpcodeRepr::DIV as u32) << 24)
@@ -692,7 +692,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::DIVI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::EQ(ra, rb, rc) => {
                 ((OpcodeRepr::EQ as u32) << 24)
@@ -710,7 +710,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::EXPI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::GT(ra, rb, rc) => {
                 ((OpcodeRepr::GT as u32) << 24)
@@ -746,7 +746,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::MODI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::MOVE(ra, rb) => {
                 ((OpcodeRepr::MOVE as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
@@ -761,7 +761,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::MULI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::NOT(ra, rb) => {
                 ((OpcodeRepr::NOT as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
@@ -776,7 +776,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::ORI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::SLL(ra, rb, rc) => {
                 ((OpcodeRepr::SLL as u32) << 24)
@@ -788,7 +788,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::SLLI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::SRL(ra, rb, rc) => {
                 ((OpcodeRepr::SRL as u32) << 24)
@@ -800,7 +800,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::SRLI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::SUB(ra, rb, rc) => {
                 ((OpcodeRepr::SUB as u32) << 24)
@@ -812,7 +812,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::SUBI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::XOR(ra, rb, rc) => {
                 ((OpcodeRepr::XOR as u32) << 24)
@@ -824,7 +824,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::XORI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::CIMV(ra, rb, rc) => {
                 ((OpcodeRepr::CIMV as u32) << 24)
@@ -835,37 +835,37 @@ impl From<Opcode> for u32 {
             Opcode::CTMV(ra, rb) => {
                 ((OpcodeRepr::CTMV as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
             }
-            Opcode::JI(imm24) => ((OpcodeRepr::JI as u32) << 24) | (imm24 as u32),
+            Opcode::JI(imm24) => ((OpcodeRepr::JI as u32) << 24) | (imm24.get() as u32),
             Opcode::JNEI(ra, rb, imm12) => {
                 ((OpcodeRepr::JNEI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::RET(ra) => ((OpcodeRepr::RET as u32) << 24) | ((ra as u32) << 18),
             Opcode::RETD(ra, rb) => {
                 ((OpcodeRepr::RETD as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
             }
-            Opcode::CFEI(imm24) => ((OpcodeRepr::CFEI as u32) << 24) | (imm24 as u32),
-            Opcode::CFSI(imm24) => ((OpcodeRepr::CFSI as u32) << 24) | (imm24 as u32),
+            Opcode::CFEI(imm24) => ((OpcodeRepr::CFEI as u32) << 24) | (imm24.get() as u32),
+            Opcode::CFSI(imm24) => ((OpcodeRepr::CFSI as u32) << 24) | (imm24.get() as u32),
             Opcode::LB(ra, rb, imm12) => {
                 ((OpcodeRepr::LB as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::LW(ra, rb, imm12) => {
                 ((OpcodeRepr::LW as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::ALOC(ra) => ((OpcodeRepr::ALOC as u32) << 24) | ((ra as u32) << 18),
             Opcode::MCL(ra, rb) => {
                 ((OpcodeRepr::MCL as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
             }
             Opcode::MCLI(ra, imm18) => {
-                ((OpcodeRepr::MCLI as u32) << 24) | ((ra as u32) << 18) | (imm18 as u32)
+                ((OpcodeRepr::MCLI as u32) << 24) | ((ra as u32) << 18) | (imm18.get() as u32)
             }
             Opcode::MCP(ra, rb, rc) => {
                 ((OpcodeRepr::MCP as u32) << 24)
@@ -877,7 +877,7 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::MCPI as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::MEQ(ra, rb, rc, rd) => {
                 ((OpcodeRepr::MEQ as u32) << 24)
@@ -890,13 +890,13 @@ impl From<Opcode> for u32 {
                 ((OpcodeRepr::SB as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::SW(ra, rb, imm12) => {
                 ((OpcodeRepr::SW as u32) << 24)
                     | ((ra as u32) << 18)
                     | ((rb as u32) << 12)
-                    | (imm12 as u32)
+                    | (imm12.get() as u32)
             }
             Opcode::BAL(ra, rb, rc) => {
                 ((OpcodeRepr::BAL as u32) << 24)
@@ -1022,7 +1022,7 @@ impl From<Opcode> for u32 {
             Opcode::NOOP => (OpcodeRepr::NOOP as u32) << 24,
             Opcode::FLAG(ra) => ((OpcodeRepr::FLAG as u32) << 24) | ((ra as u32) << 18),
             Opcode::GM(ra, imm18) => {
-                ((OpcodeRepr::GM as u32) << 24) | ((ra as u32) << 18) | (imm18 as u32)
+                ((OpcodeRepr::GM as u32) << 24) | ((ra as u32) << 18) | (imm18.get() as u32)
             }
             Opcode::Undefined => (0x00 << 24),
         }
