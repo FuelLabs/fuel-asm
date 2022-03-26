@@ -22,10 +22,10 @@ use Opcode::*;
 // A sample program to perform ecrecover
 let program = vec![
     MOVE(0x10, 0x01),      // set r[0x10] := $one
-    SLLI(0x20, 0x10, 5),   // set r[0x20] := `r[0x10] << 5 == 32`
-    SLLI(0x21, 0x10, 6),   // set r[0x21] := `r[0x10] << 6 == 64`
+    SLLI(0x20, 0x10, Immediate12::new(5).unwrap()),   // set r[0x20] := `r[0x10] << 5 == 32`
+    SLLI(0x21, 0x10, Immediate12::new(6).unwrap()),   // set r[0x21] := `r[0x10] << 6 == 64`
     ALOC(0x21),            // alloc `r[0x21] == 64` to the heap
-    ADDI(0x10, 0x07, 1),   // set r[0x10] := `$hp + 1` (allocated heap)
+    ADDI(0x10, 0x07, Immediate12::new(1).unwrap()),   // set r[0x10] := `$hp + 1` (allocated heap)
     MOVE(0x11, 0x04),      // set r[0x11] := $ssp
     ADD(0x12, 0x04, 0x20), // set r[0x12] := `$ssp + r[0x20]`
     ECR(0x10, 0x11, 0x12), // recover public key in memory[r[0x10], 64]

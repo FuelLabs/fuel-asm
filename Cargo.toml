@@ -24,3 +24,6 @@ serde-types-minimal = ["fuel-types/serde-types-minimal", "serde"]
 name = "test-encoding"
 path = "tests/encoding.rs"
 required-features = ["std"]
+
+[patch.crates-io]
+fuel-types = { git = "https://github.com/FuelLabs/fuel-types", branch = "checked-imms" }

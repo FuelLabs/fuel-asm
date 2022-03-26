@@ -5,9 +5,9 @@ use std::io::{Read, Write};
 fn opcode() {
     // TODO maybe split this test case into several smaller ones?
     let r = 0x3f;
-    let imm12 = 0xbff;
-    let imm18 = 0x2ffff;
-    let imm24 = 0xbfffff;
+    let imm12 = Immediate12::new(0xbffu16).unwrap();
+    let imm18 = Immediate18::new(0x2ffffu32).unwrap();
+    let imm24 = Immediate24::new(0xbfffffu32).unwrap();
 
     let mut data = vec![
         Opcode::ADD(r, r, r),
@@ -192,7 +192,7 @@ fn opcode() {
 
 #[test]
 fn panic_reason_description() {
-    let imm24 = 0xbfffff;
+    let imm24 = Immediate24::new(0xbfffff).unwrap();
 
     let reasons = vec![
         PanicReason::Revert,

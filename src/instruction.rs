@@ -48,10 +48,22 @@ impl Instruction {
         let rc = ((instruction >> 6) & 0x3f) as RegisterId;
         let rd = (instruction & 0x3f) as RegisterId;
 
-        let imm06 = (instruction & 0xff) as Immediate06;
-        let imm12 = (instruction & 0x0fff) as Immediate12;
-        let imm18 = (instruction & 0x3ffff) as Immediate18;
-        let imm24 = (instruction & 0xffffff) as Immediate24;
+        let imm06 = match Immediate06::new((instruction & 0x3F) as u8) {
+            Some(v) => v,
+            None => panic!("out of bounds"),
+        };
+        let imm12 = match Immediate12::new((instruction & 0x0fff) as u16) {
+            Some(v) => v,
+            None => panic!("out of bounds"),
+        };
+        let imm18 = match Immediate18::new(instruction & 0x3ffff) {
+            Some(v) => v,
+            None => panic!("out of bounds"),
+        };
+        let imm24 = match Immediate24::new(instruction & 0xffffff) {
+            Some(v) => v,
+            None => panic!("out of bounds"),
+        };
 
         Self {
             op,
@@ -168,9 +180,9 @@ impl Instruction {
         let repr = OpcodeRepr::from_u8(op);
 
         let _ = imm06;
-        let imm12 = imm12 as Word;
-        let imm18 = imm18 as Word;
-        let imm24 = imm24 as Word;
+        let imm12 = imm12.get() as Word;
+        let imm18 = imm18.get() as Word;
+        let imm24 = imm24.get() as Word;
 
         let imm12_mask = (op & 0xf0 == 0x50) || (op & 0xf0 == 0x60);
         let imm18_mask = (op & 0xf0 == 0x70) || (op & 0xf0 == 0x80);
@@ -214,9 +226,9 @@ impl From<Instruction> for u32 {
         let c = (parsed.rc as u32) << 6;
         let d = parsed.rd as u32;
 
-        let imm12 = parsed.imm12 as u32;
-        let imm18 = parsed.imm18 as u32;
-        let imm24 = parsed.imm24 as u32;
+        let imm12 = parsed.imm12.get() as u32;
+        let imm18 = parsed.imm18.get() as u32;
+        let imm24 = parsed.imm24.get() as u32;
 
         let repr = OpcodeRepr::from_u8(parsed.op);
 
