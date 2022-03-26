@@ -5,93 +5,11 @@ use std::io::{Read, Write};
 fn opcode() {
     // TODO maybe split this test case into several smaller ones?
     let r = 0x3f;
-    let imm12 = 0xbff;
-    let imm18 = 0x2ffff;
-    let imm24 = 0xbfffff;
+    let imm12 = 1 << 12 - 1;
+    let imm18 = 1 << 18 - 1;
+    let imm24 = 1 << 24;
 
-    let mut data = vec![
-        Opcode::ADD(r, r, r),
-        Opcode::ADDI(r, r, imm12),
-        Opcode::AND(r, r, r),
-        Opcode::ANDI(r, r, imm12),
-        Opcode::DIV(r, r, r),
-        Opcode::DIVI(r, r, imm12),
-        Opcode::EQ(r, r, r),
-        Opcode::EXP(r, r, r),
-        Opcode::EXPI(r, r, imm12),
-        Opcode::GT(r, r, r),
-        Opcode::LT(r, r, r),
-        Opcode::MLOG(r, r, r),
-        Opcode::MROO(r, r, r),
-        Opcode::MOD(r, r, r),
-        Opcode::MODI(r, r, imm12),
-        Opcode::MOVE(r, r),
-        Opcode::MUL(r, r, r),
-        Opcode::MULI(r, r, imm12),
-        Opcode::NOT(r, r),
-        Opcode::OR(r, r, r),
-        Opcode::ORI(r, r, imm12),
-        Opcode::SLL(r, r, r),
-        Opcode::SLLI(r, r, imm12),
-        Opcode::SRL(r, r, r),
-        Opcode::SRLI(r, r, imm12),
-        Opcode::SUB(r, r, r),
-        Opcode::SUBI(r, r, imm12),
-        Opcode::XOR(r, r, r),
-        Opcode::XORI(r, r, imm12),
-        Opcode::CIMV(r, r, r),
-        Opcode::CTMV(r, r),
-        Opcode::JI(imm24),
-        Opcode::JNEI(r, r, imm12),
-        Opcode::RET(r),
-        Opcode::RETD(r, r),
-        Opcode::CFEI(imm24),
-        Opcode::CFSI(imm24),
-        Opcode::LB(r, r, imm12),
-        Opcode::LW(r, r, imm12),
-        Opcode::ALOC(r),
-        Opcode::MCL(r, r),
-        Opcode::MCLI(r, imm18),
-        Opcode::MCP(r, r, r),
-        Opcode::MCPI(r, r, imm12),
-        Opcode::MEQ(r, r, r, r),
-        Opcode::SB(r, r, imm12),
-        Opcode::SW(r, r, imm12),
-        Opcode::BAL(r, r, r),
-        Opcode::BHSH(r, r),
-        Opcode::BHEI(r),
-        Opcode::BURN(r),
-        Opcode::CALL(r, r, r, r),
-        Opcode::CCP(r, r, r, r),
-        Opcode::CROO(r, r),
-        Opcode::CSIZ(r, r),
-        Opcode::CB(r),
-        Opcode::LDC(r, r, r),
-        Opcode::LOG(r, r, r, r),
-        Opcode::LOGD(r, r, r, r),
-        Opcode::MINT(r),
-        Opcode::RVRT(r),
-        Opcode::SLDC(r, r, r),
-        Opcode::SRW(r, r),
-        Opcode::SRWQ(r, r),
-        Opcode::SWW(r, r),
-        Opcode::SWWQ(r, r),
-        Opcode::TR(r, r, r),
-        Opcode::TRO(r, r, r, r),
-        Opcode::ECR(r, r, r),
-        Opcode::K256(r, r, r),
-        Opcode::S256(r, r, r),
-        Opcode::XIL(r, r),
-        Opcode::XIS(r, r),
-        Opcode::XOL(r, r),
-        Opcode::XOS(r, r),
-        Opcode::XWL(r, r),
-        Opcode::XWS(r, r),
-        Opcode::NOOP,
-        Opcode::FLAG(r),
-        Opcode::GM(r, imm18),
-        Opcode::Undefined,
-    ];
+    let mut data = vec![Opcode::JI(imm24)];
 
     // Pad to even length
     if data.len() % 2 != 0 {
@@ -124,8 +42,7 @@ fn opcode() {
     let mut buffer = [0u8; Opcode::LEN];
 
     for mut op in data.clone() {
-        op.read(&mut buffer)
-            .expect("Failed to write opcode to buffer");
+        op.read(&mut buffer).expect("Failed to write opcode to buffer");
         bytes.extend(&buffer);
 
         let op_p = u32::from(op);
@@ -156,15 +73,13 @@ fn opcode() {
             op_bytes.pop();
 
             let op_r = unsafe { Opcode::from_bytes_unchecked(op_bytes.as_slice()) };
-            let op_s = Opcode::from_bytes(op_bytes.as_slice())
-                .expect("Failed to safely generate op from bytes!");
+            let op_s = Opcode::from_bytes(op_bytes.as_slice()).expect("Failed to safely generate op from bytes!");
 
             assert_eq!(op, op_r);
             assert_eq!(op, op_s);
 
             let ins_r = unsafe { Instruction::from_slice_unchecked(op_bytes.as_slice()) };
-            let ins_s = Instruction::from_bytes(op_bytes.as_slice())
-                .expect("Failed to safely generate op from bytes!");
+            let ins_s = Instruction::from_bytes(op_bytes.as_slice()).expect("Failed to safely generate op from bytes!");
 
             assert_eq!(op, Opcode::from(ins_r));
             assert_eq!(op, Opcode::from(ins_s));
@@ -179,15 +94,11 @@ fn opcode() {
     }
 
     let mut op_p = Opcode::Undefined;
-    bytes
-        .chunks(Opcode::LEN)
-        .zip(data.iter())
-        .for_each(|(chunk, op)| {
-            op_p.write(chunk)
-                .expect("Failed to parse opcode from chunk");
+    bytes.chunks(Opcode::LEN).zip(data.iter()).for_each(|(chunk, op)| {
+        op_p.write(chunk).expect("Failed to parse opcode from chunk");
 
-            assert_eq!(op, &op_p);
-        });
+        assert_eq!(op, &op_p);
+    });
 }
 
 #[test]
