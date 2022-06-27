@@ -74,8 +74,8 @@ pub enum PanicReason {
     ExpectedParentInternalContext = 0x1e,
     /// The jump instruction cannot move backwards in predicate verification.
     IllegalJump = 0x1f,
-    /// RESERV20
-    RESERV20 = 0x20,
+    /// The message output is with a recipient.
+    NonZeroMessageOutputRecipient = 0x20,
     /// RESERV21
     RESERV21 = 0x21,
     /// RESERV22
