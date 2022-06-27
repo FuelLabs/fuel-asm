@@ -76,8 +76,8 @@ pub enum PanicReason {
     IllegalJump = 0x1f,
     /// The message output is with a recipient.
     NonZeroMessageOutputRecipient = 0x20,
-    /// RESERV21
-    RESERV21 = 0x21,
+    /// The destination recipient for a message output is zero.
+    ZeroedMessageOutputRecipient = 0x21,
     /// RESERV22
     RESERV22 = 0x22,
     /// RESERV23
