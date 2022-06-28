@@ -5,8 +5,10 @@ use std::{io, iter};
 
 use crate::Instruction;
 
+mod args;
 mod consts;
 
+pub use args::{GMArgs, GTFArgs};
 pub use consts::OpcodeRepr;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -129,12 +131,6 @@ pub enum Opcode {
 
     /// Bitwise XORs a register and an immediate value.
     XORI(RegisterId, RegisterId, Immediate12),
-
-    /// Check relative timelock.
-    CIMV(RegisterId, RegisterId, RegisterId),
-
-    /// Check absolute timelock.
-    CTMV(RegisterId, RegisterId),
 
     /// Jump.
     JI(Immediate24),
@@ -293,6 +289,9 @@ pub enum Opcode {
     /// Get metadata from memory.
     GM(RegisterId, Immediate18),
 
+    /// Get transaction fields.
+    GTF(RegisterId, RegisterId, Immediate12),
+
     /// Undefined opcode, potentially from inconsistent serialization.
     Undefined,
 }
@@ -345,8 +344,6 @@ impl Opcode {
             OpcodeRepr::SUBI => Opcode::SUBI(ra, rb, imm12),
             OpcodeRepr::XOR => Opcode::XOR(ra, rb, rc),
             OpcodeRepr::XORI => Opcode::XORI(ra, rb, imm12),
-            OpcodeRepr::CIMV => Opcode::CIMV(ra, rb, rc),
-            OpcodeRepr::CTMV => Opcode::CTMV(ra, rb),
             OpcodeRepr::JI => Opcode::JI(imm24),
             OpcodeRepr::JNEI => Opcode::JNEI(ra, rb, imm12),
             OpcodeRepr::JNZI => Opcode::JNZI(ra, imm18),
@@ -399,6 +396,7 @@ impl Opcode {
             OpcodeRepr::NOOP => Opcode::NOOP,
             OpcodeRepr::FLAG => Opcode::FLAG(ra),
             OpcodeRepr::GM => Opcode::GM(ra, imm18),
+            OpcodeRepr::GTF => Opcode::GTF(ra, rb, imm12),
             _ => Opcode::Undefined,
         }
     }
@@ -456,8 +454,6 @@ impl Opcode {
             Self::SUBI(ra, rb, _) => [Some(*ra), Some(*rb), None, None],
             Self::XOR(ra, rb, rc) => [Some(*ra), Some(*rb), Some(*rc), None],
             Self::XORI(ra, rb, _) => [Some(*ra), Some(*rb), None, None],
-            Self::CIMV(ra, rb, rc) => [Some(*ra), Some(*rb), Some(*rc), None],
-            Self::CTMV(ra, rb) => [Some(*ra), Some(*rb), None, None],
             Self::JI(_) => [None; 4],
             Self::JNEI(ra, rb, _) => [Some(*ra), Some(*rb), None, None],
             Self::JNZI(ra, _) => [Some(*ra), None, None, None],
@@ -510,6 +506,7 @@ impl Opcode {
             Self::NOOP => [None; 4],
             Self::FLAG(ra) => [Some(*ra), None, None, None],
             Self::GM(ra, _) => [Some(*ra), None, None, None],
+            Self::GTF(ra, rb, _) => [Some(*ra), Some(*rb), None, None],
             Self::Undefined => [None; 4],
         }
     }
@@ -533,7 +530,8 @@ impl Opcode {
             | Self::LB(_, _, imm)
             | Self::LW(_, _, imm)
             | Self::SB(_, _, imm)
-            | Self::SW(_, _, imm) => Some(*imm as Word),
+            | Self::SW(_, _, imm)
+            | Self::GTF(_, _, imm) => Some(*imm as Word),
 
             Self::MCLI(_, imm) | Self::GM(_, imm) | Self::JNZI(_, imm) | Self::MOVI(_, imm) => {
                 Some(*imm as Word)
@@ -559,8 +557,6 @@ impl Opcode {
             | Self::SRL(_, _, _)
             | Self::SUB(_, _, _)
             | Self::XOR(_, _, _)
-            | Self::CIMV(_, _, _)
-            | Self::CTMV(_, _)
             | Self::RET(_)
             | Self::RETD(_, _)
             | Self::ALOC(_)
@@ -603,6 +599,16 @@ impl Opcode {
             | Self::FLAG(_)
             | Self::Undefined => None,
         }
+    }
+
+    /// Create a new [`Opcode::GM`] instruction from its args
+    pub const fn gm(ra: RegisterId, args: GMArgs) -> Self {
+        Self::GM(ra, args as Immediate18)
+    }
+
+    /// Create a new [`Opcode::GTF`] instruction from its args
+    pub const fn gtf(ra: RegisterId, rb: RegisterId, args: GTFArgs) -> Self {
+        Self::GTF(ra, rb, args as Immediate12)
     }
 }
 
@@ -850,15 +856,6 @@ impl From<Opcode> for u32 {
                     | ((rb as u32) << 12)
                     | (imm12 as u32)
             }
-            Opcode::CIMV(ra, rb, rc) => {
-                ((OpcodeRepr::CIMV as u32) << 24)
-                    | ((ra as u32) << 18)
-                    | ((rb as u32) << 12)
-                    | ((rc as u32) << 6)
-            }
-            Opcode::CTMV(ra, rb) => {
-                ((OpcodeRepr::CTMV as u32) << 24) | ((ra as u32) << 18) | ((rb as u32) << 12)
-            }
             Opcode::JI(imm24) => ((OpcodeRepr::JI as u32) << 24) | (imm24 as u32),
             Opcode::JNEI(ra, rb, imm12) => {
                 ((OpcodeRepr::JNEI as u32) << 24)
@@ -1059,6 +1056,12 @@ impl From<Opcode> for u32 {
             Opcode::GM(ra, imm18) => {
                 ((OpcodeRepr::GM as u32) << 24) | ((ra as u32) << 18) | (imm18 as u32)
             }
+            Opcode::GTF(ra, rb, imm12) => {
+                ((OpcodeRepr::GTF as u32) << 24)
+                    | ((ra as u32) << 18)
+                    | ((rb as u32) << 12)
+                    | (imm12 as u32)
+            }
             Opcode::Undefined => (0x00 << 24),
         }
     }
@@ -1107,7 +1110,7 @@ impl iter::FromIterator<Opcode> for Vec<u8> {
     where
         T: IntoIterator<Item = Opcode>,
     {
-        iter.into_iter().map(Opcode::to_bytes).flatten().collect()
+        iter.into_iter().flat_map(Opcode::to_bytes).collect()
     }
 }
 
