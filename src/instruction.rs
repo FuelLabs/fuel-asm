@@ -219,9 +219,6 @@ impl From<Instruction> for u32 {
         let repr = OpcodeRepr::from_u8(parsed.op);
 
         let args = match repr {
-            OpcodeRepr::SRWQ
-            | OpcodeRepr::SWWQ=> a | b | c | d,
-
             OpcodeRepr::ADD
             | OpcodeRepr::AND
             | OpcodeRepr::DIV
@@ -247,7 +244,7 @@ impl From<Instruction> for u32 {
             | OpcodeRepr::S256
             | OpcodeRepr::SCWQ
             | OpcodeRepr::SRW
-            | OpcodeRepr::SWW=> a | b | c,
+            | OpcodeRepr::SWW => a | b | c,
 
             OpcodeRepr::ADDI
             | OpcodeRepr::ANDI
@@ -296,7 +293,9 @@ impl From<Instruction> for u32 {
             | OpcodeRepr::LOG
             | OpcodeRepr::LOGD
             | OpcodeRepr::SMO
-            | OpcodeRepr::TRO => a | b | c | d,
+            | OpcodeRepr::TRO
+            | OpcodeRepr::SRWQ
+            | OpcodeRepr::SWWQ => a | b | c | d,
 
             _ => 0,
         };
