@@ -7,6 +7,7 @@
 
 mod instruction;
 mod opcode;
+pub mod opcode2;
 mod panic_reason;
 
 mod macros;
