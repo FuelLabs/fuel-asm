@@ -19,7 +19,7 @@ pub use instruction_result::InstructionResult;
 
 // Defines the `Instruction` and `Opcode` types, along with an `op` module declaring a unique type
 // for each opcode's instruction variant.
-impl_opcodes! {
+impl_instructions! {
     "Adds two registers."
     0x10 ADD add [RegId RegId RegId]
     "Bitwise ANDs two registers."

@@ -4,14 +4,14 @@
 /// - Register and immediate value access methods for each opcode instruction type.
 /// - An enum over all possible opcodes.
 /// - An enum over all possible instructions.
-macro_rules! impl_opcodes {
+macro_rules! impl_instructions {
     // Recursively declares a unique struct for each opcode.
     (decl_op_struct $doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*] $($rest:tt)*) => {
         #[doc = $doc]
         #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
         pub struct $Op(pub (super) [u8; 3]);
-        impl_opcodes!(decl_op_struct $($rest)*);
+        impl_instructions!(decl_op_struct $($rest)*);
     };
     (decl_op_struct) => {};
 
@@ -106,35 +106,35 @@ macro_rules! impl_opcodes {
         }
     };
     (impl_op_accessors [RegId RegId]) => {
-        impl_opcodes!(impl_op_accessors [RegId]);
+        impl_instructions!(impl_op_accessors [RegId]);
         /// Access the ID for register B.
         pub fn rb(&self) -> RegId {
             rb_from_bytes(self.0)
         }
     };
     (impl_op_accessors [RegId RegId RegId]) => {
-        impl_opcodes!(impl_op_accessors [RegId RegId]);
+        impl_instructions!(impl_op_accessors [RegId RegId]);
         /// Access the ID for register C.
         pub fn rc(&self) -> RegId {
             rc_from_bytes(self.0)
         }
     };
     (impl_op_accessors [RegId RegId RegId RegId]) => {
-        impl_opcodes!(impl_op_accessors [RegId RegId RegId]);
+        impl_instructions!(impl_op_accessors [RegId RegId RegId]);
         /// Access the ID for register D.
         pub fn rd(&self) -> RegId {
             rd_from_bytes(self.0)
         }
     };
     (impl_op_accessors [RegId RegId Imm12]) => {
-        impl_opcodes!(impl_op_accessors [RegId RegId]);
+        impl_instructions!(impl_op_accessors [RegId RegId]);
         /// Access the 12-bit immediate value.
         pub fn imm12(&self) -> Imm12 {
             imm12_from_bytes(self.0)
         }
     };
     (impl_op_accessors [RegId Imm18]) => {
-        impl_opcodes!(impl_op_accessors [RegId]);
+        impl_instructions!(impl_op_accessors [RegId]);
         /// Access the 18-bit immediate value.
         pub fn imm18(&self) -> Imm18 {
             imm18_from_bytes(self.0)
@@ -249,12 +249,12 @@ macro_rules! impl_opcodes {
             /// The associated 8-bit Opcode value.
             pub const OPCODE: Opcode = Opcode::$Op;
 
-            impl_opcodes!(impl_op_new [$($field)*]);
-            impl_opcodes!(impl_op_accessors [$($field)*]);
-            impl_opcodes!(impl_op_unpack [$($field)*]);
+            impl_instructions!(impl_op_new [$($field)*]);
+            impl_instructions!(impl_op_accessors [$($field)*]);
+            impl_instructions!(impl_op_unpack [$($field)*]);
         }
 
-        impl_opcodes!(impl_op_constructor $doc $Op $op [$($field)*]);
+        impl_instructions!(impl_op_constructor $doc $Op $op [$($field)*]);
 
         impl From<$Op> for [u8; 3] {
             fn from($Op(arr): $Op) -> Self {
@@ -280,7 +280,7 @@ macro_rules! impl_opcodes {
             }
         }
 
-        impl_opcodes!(impl_op $($rest)*);
+        impl_instructions!(impl_op $($rest)*);
     };
     (impl_op) => {};
 
@@ -345,12 +345,12 @@ macro_rules! impl_opcodes {
             //! Definitions and implementations for each unique instruction type, one for each
             //! unique `Opcode` variant.
             use super::*;
-            impl_opcodes!(decl_op_struct $($tts)*);
-            impl_opcodes!(impl_op $($tts)*);
+            impl_instructions!(decl_op_struct $($tts)*);
+            impl_instructions!(impl_op $($tts)*);
         }
-        impl_opcodes!(decl_opcode_enum $($tts)*);
-        impl_opcodes!(decl_instruction_enum $($tts)*);
-        impl_opcodes!(impl_opcode $($tts)*);
-        impl_opcodes!(impl_instruction $($tts)*);
+        impl_instructions!(decl_opcode_enum $($tts)*);
+        impl_instructions!(decl_instruction_enum $($tts)*);
+        impl_instructions!(impl_opcode $($tts)*);
+        impl_instructions!(impl_instruction $($tts)*);
     };
 }
