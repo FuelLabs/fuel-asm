@@ -363,15 +363,15 @@ impl From<Imm24> for u128 {
     }
 }
 
-impl From<Instruction> for u32 {
+impl From<Instruction> for RawInstruction {
     fn from(inst: Instruction) -> Self {
-        u32::from_be_bytes(inst.into())
+        RawInstruction::from_be_bytes(inst.into())
     }
 }
 
-impl core::convert::TryFrom<u32> for Instruction {
+impl core::convert::TryFrom<RawInstruction> for Instruction {
     type Error = InvalidOpcode;
-    fn try_from(u: u32) -> Result<Self, Self::Error> {
+    fn try_from(u: RawInstruction) -> Result<Self, Self::Error> {
         Self::try_from(u.to_be_bytes())
     }
 }
