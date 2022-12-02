@@ -196,44 +196,44 @@ macro_rules! impl_opcodes {
     // Generate a free function named after the $op for constructing an `Instruction`.
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId) -> Instruction {
-            $Op::new(ra).into()
+        pub fn $op(ra: u8) -> Instruction {
+            $Op::new(RegId::new(ra)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId, rb: RegId) -> Instruction {
-            $Op::new(ra, rb).into()
+        pub fn $op(ra: u8, rb: u8) -> Instruction {
+            $Op::new(RegId::new(ra), RegId::new(rb)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId RegId]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId, rb: RegId, rc: RegId) -> Instruction {
-            $Op::new(ra, rb, rc).into()
+        pub fn $op(ra: u8, rb: u8, rc: u8) -> Instruction {
+            $Op::new(RegId::new(ra), RegId::new(rb), RegId::new(rc)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId RegId RegId]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId, rb: RegId, rc: RegId, rd: RegId) -> Instruction {
-            $Op::new(ra, rb, rc, rd).into()
+        pub fn $op(ra: u8, rb: u8, rc: u8, rd: u8) -> Instruction {
+            $Op::new(RegId::new(ra), RegId::new(rb), RegId::new(rc), RegId::new(rd)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId Imm12]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId, rb: RegId, imm: Imm12) -> Instruction {
-            $Op::new(ra, rb, imm).into()
+        pub fn $op(ra: u8, rb: u8, imm: u16) -> Instruction {
+            $Op::new(RegId::new(ra), RegId::new(rb), Imm12::new(imm)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId Imm18]) => {
         #[doc = $doc]
-        pub fn $op(ra: RegId, imm: Imm18) -> Instruction {
-            $Op::new(ra, imm).into()
+        pub fn $op(ra: u8, imm: u32) -> Instruction {
+            $Op::new(RegId::new(ra), Imm18::new(imm)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident [Imm24]) => {
         #[doc = $doc]
-        pub fn $op(imm: Imm24) -> Instruction {
-            $Op::new(imm).into()
+        pub fn $op(imm: u32) -> Instruction {
+            $Op::new(Imm24::new(imm)).into()
         }
     };
     (impl_op_constructor $doc:literal $Op:ident $op:ident []) => {
@@ -342,7 +342,7 @@ macro_rules! impl_opcodes {
     // separately.
     ($($tts:tt)*) => {
         pub mod op {
-            //! Definitions and implementations for each unique Instruction type, one for each
+            //! Definitions and implementations for each unique instruction type, one for each
             //! unique `Opcode` variant.
             use super::*;
             impl_opcodes!(decl_op_struct $($tts)*);
