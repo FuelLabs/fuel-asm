@@ -6,7 +6,7 @@
 /// - An enum over all possible instructions.
 macro_rules! impl_opcodes {
     // Recursively declares a unique struct for each opcode.
-    (decl_op_struct $doc:literal $ix:literal $Op:ident [$($field:ident)*] $($rest:tt)*) => {
+    (decl_op_struct $doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*] $($rest:tt)*) => {
         #[doc = $doc]
         #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -16,7 +16,7 @@ macro_rules! impl_opcodes {
     (decl_op_struct) => {};
 
     // Define the `OpcodeRepr` enum.
-    (decl_opcode_enum $($doc:literal $ix:literal $Op:ident [$($field:ident)*])*) => {
+    (decl_opcode_enum $($doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*])*) => {
         /// Solely the opcode portion of an instruction represented as a single byte.
         #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -30,7 +30,7 @@ macro_rules! impl_opcodes {
     };
 
     // Define the `Opcode` enum.
-    (decl_instruction_enum $($doc:literal $ix:literal $Op:ident [$($field:ident)*])*) => {
+    (decl_instruction_enum $($doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*])*) => {
         /// Representation of a single instruction for the interpreter.
         ///
         /// The opcode is represented in the tag (variant), or may be retrieved in the form of an
@@ -193,8 +193,58 @@ macro_rules! impl_opcodes {
     };
     (impl_op_unpack []) => {};
 
+    // Generate a free function named after the $op for constructing an `Instruction`.
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId) -> Instruction {
+            $Op::new(ra).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId, rb: RegId) -> Instruction {
+            $Op::new(ra, rb).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId RegId]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId, rb: RegId, rc: RegId) -> Instruction {
+            $Op::new(ra, rb, rc).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId RegId RegId]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId, rb: RegId, rc: RegId, rd: RegId) -> Instruction {
+            $Op::new(ra, rb, rc, rd).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId RegId Imm12]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId, rb: RegId, imm: Imm12) -> Instruction {
+            $Op::new(ra, rb, imm).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [RegId Imm18]) => {
+        #[doc = $doc]
+        pub fn $op(ra: RegId, imm: Imm18) -> Instruction {
+            $Op::new(ra, imm).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident [Imm24]) => {
+        #[doc = $doc]
+        pub fn $op(imm: Imm24) -> Instruction {
+            $Op::new(imm).into()
+        }
+    };
+    (impl_op_constructor $doc:literal $Op:ident $op:ident []) => {
+        #[doc = $doc]
+        pub fn $op() -> Instruction {
+            $Op::new().into()
+        }
+    };
+
     // Implement constructors and accessors for register and immediate values.
-    (impl_op $doc:literal $ix:literal $Op:ident [$($field:ident)*] $($rest:tt)*) => {
+    (impl_op $doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*] $($rest:tt)*) => {
         impl $Op {
             /// The associated 8-bit Opcode value.
             pub const OPCODE: Opcode = Opcode::$Op;
@@ -203,6 +253,8 @@ macro_rules! impl_opcodes {
             impl_opcodes!(impl_op_accessors [$($field)*]);
             impl_opcodes!(impl_op_unpack [$($field)*]);
         }
+
+        impl_opcodes!(impl_op_constructor $doc $Op $op [$($field)*]);
 
         impl From<$Op> for [u8; 3] {
             fn from($Op(arr): $Op) -> Self {
@@ -233,7 +285,7 @@ macro_rules! impl_opcodes {
     (impl_op) => {};
 
     // Implement `TryFrom<u8>` for `Opcode`.
-    (impl_opcode $($doc:literal $ix:literal $Op:ident [$($field:ident)*])*) => {
+    (impl_opcode $($doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*])*) => {
         impl core::convert::TryFrom<u8> for Opcode {
             type Error = InvalidOpcode;
             fn try_from(u: u8) -> Result<Self, Self::Error> {
@@ -248,7 +300,7 @@ macro_rules! impl_opcodes {
     };
 
     // Implement accessors for register and immediate values.
-    (impl_instruction $($doc:literal $ix:literal $Op:ident [$($field:ident)*])*) => {
+    (impl_instruction $($doc:literal $ix:literal $Op:ident $op:ident [$($field:ident)*])*) => {
         impl Instruction {
             /// This instruction's opcode.
             pub fn opcode(&self) -> Opcode {

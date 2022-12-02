@@ -21,168 +21,168 @@ pub use instruction_result::InstructionResult;
 // instruction variant.
 impl_opcodes! {
     "Adds two registers."
-    0x10 ADD [RegId RegId RegId]
+    0x10 ADD add [RegId RegId RegId]
     "Bitwise ANDs two registers."
-    0x11 AND [RegId RegId RegId]
+    0x11 AND and [RegId RegId RegId]
     "Divides two registers."
-    0x12 DIV [RegId RegId RegId]
+    0x12 DIV div [RegId RegId RegId]
     "Compares two registers for equality."
-    0x13 EQ [RegId RegId RegId]
+    0x13 EQ eq [RegId RegId RegId]
     "Raises one register to the power of another."
-    0x14 EXP [RegId RegId RegId]
+    0x14 EXP exp [RegId RegId RegId]
     "Compares two registers for greater-than."
-    0x15 GT [RegId RegId RegId]
+    0x15 GT gt [RegId RegId RegId]
     "Compares two registers for less-than."
-    0x16 LT [RegId RegId RegId]
+    0x16 LT lt [RegId RegId RegId]
     "The integer logarithm of a register."
-    0x17 MLOG [RegId RegId RegId]
+    0x17 MLOG mlog [RegId RegId RegId]
     "The integer root of a register."
-    0x18 MROO [RegId RegId RegId]
+    0x18 MROO mroo [RegId RegId RegId]
     "Modulo remainder of two registers."
-    0x19 MOD [RegId RegId RegId]
+    0x19 MOD mod_ [RegId RegId RegId]
     "Copy from one register to another."
-    0x1A MOVE [RegId RegId]
+    0x1A MOVE move_ [RegId RegId]
     "Multiplies two registers."
-    0x1B MUL [RegId RegId RegId]
+    0x1B MUL mul [RegId RegId RegId]
     "Bitwise NOT a register."
-    0x1C NOT [RegId RegId]
+    0x1C NOT not [RegId RegId]
     "Bitwise ORs two registers."
-    0x1D OR [RegId RegId RegId]
+    0x1D OR or [RegId RegId RegId]
     "Left shifts a register by a register."
-    0x1E SLL [RegId RegId RegId]
+    0x1E SLL sll [RegId RegId RegId]
     "Right shifts a register by a register."
-    0x1F SRL [RegId RegId RegId]
+    0x1F SRL srl [RegId RegId RegId]
     "Subtracts two registers."
-    0x20 SUB [RegId RegId RegId]
+    0x20 SUB sub [RegId RegId RegId]
     "Bitwise XORs two registers."
-    0x21 XOR [RegId RegId RegId]
+    0x21 XOR xor [RegId RegId RegId]
 
     "Return from context."
-    0x24 RET [RegId]
+    0x24 RET ret [RegId]
     "Return from context with data."
-    0x25 RETD [RegId RegId]
+    0x25 RETD retd [RegId RegId]
     "Allocate a number of bytes from the heap."
-    0x26 ALOC [RegId]
+    0x26 ALOC aloc [RegId]
     "Clear a variable number of bytes in memory."
-    0x27 MCL [RegId RegId]
+    0x27 MCL mcl [RegId RegId]
     "Copy a variable number of bytes in memory."
-    0x28 MCP [RegId RegId RegId]
+    0x28 MCP mcp [RegId RegId RegId]
     "Compare bytes in memory."
-    0x29 MEQ [RegId RegId RegId RegId]
+    0x29 MEQ meq [RegId RegId RegId RegId]
     "Get block header hash for height."
-    0x2A BHSH [RegId RegId]
+    0x2A BHSH bhsh [RegId RegId]
     "Get current block height."
-    0x2B BHEI [RegId]
+    0x2B BHEI bhei [RegId]
     "Burn coins of the current contract's asset ID."
-    0x2C BURN [RegId]
+    0x2C BURN burn [RegId]
     "Call a contract."
-    0x2D CALL [RegId RegId RegId RegId]
+    0x2D CALL call [RegId RegId RegId RegId]
     "Copy contract code for a contract."
-    0x2E CCP [RegId RegId RegId RegId]
+    0x2E CCP ccp [RegId RegId RegId RegId]
     "Get code root of a contract."
-    0x2F CROO [RegId RegId]
+    0x2F CROO croo [RegId RegId]
     "Get code size of a contract."
-    0x30 CSIZ [RegId RegId]
+    0x30 CSIZ csiz [RegId RegId]
     "Get current block proposer's address."
-    0x31 CB [RegId]
+    0x31 CB cb [RegId]
     "Load a contract's code as executable."
-    0x32 LDC [RegId RegId RegId]
+    0x32 LDC ldc [RegId RegId RegId]
     "Log an event."
-    0x33 LOG [RegId RegId RegId RegId]
+    0x33 LOG log [RegId RegId RegId RegId]
     "Log data."
-    0x34 LOGD [RegId RegId RegId RegId]
+    0x34 LOGD logd [RegId RegId RegId RegId]
     "Mint coins of the current contract's asset ID."
-    0x35 MINT [RegId]
+    0x35 MINT mint [RegId]
     "Halt execution, reverting state changes and returning a value."
-    0x36 RVRT [RegId]
+    0x36 RVRT rvrt [RegId]
     "Clear a series of slots from contract storage."
-    0x37 SCWQ [RegId RegId RegId]
+    0x37 SCWQ scwq [RegId RegId RegId]
     "Load a word from contract storage."
-    0x38 SRW [RegId RegId RegId]
+    0x38 SRW srw [RegId RegId RegId]
     "Load a series of 32 byte slots from contract storage."
-    0x39 SRWQ [RegId RegId RegId RegId]
+    0x39 SRWQ srwq [RegId RegId RegId RegId]
     "Store a word in contract storage."
-    0x3A SWW [RegId RegId RegId]
+    0x3A SWW sww [RegId RegId RegId]
     "Store a series of 32 byte slots in contract storage."
-    0x3B SWWQ [RegId RegId RegId RegId]
+    0x3B SWWQ swwq [RegId RegId RegId RegId]
     "Transfer coins to a contract unconditionally."
-    0x3C TR [RegId RegId RegId]
+    0x3C TR tr [RegId RegId RegId]
     "Transfer coins to a variable output."
-    0x3D TRO [RegId RegId RegId RegId]
+    0x3D TRO tro [RegId RegId RegId RegId]
     "The 64-byte public key (x, y) recovered from 64-byte signature on 32-byte message."
-    0x3E ECR [RegId RegId RegId]
+    0x3E ECR ecr [RegId RegId RegId]
     "The keccak-256 hash of a slice."
-    0x3F K256 [RegId RegId RegId]
+    0x3F K256 k256 [RegId RegId RegId]
     "The SHA-2-256 hash of a slice."
-    0x40 S256 [RegId RegId RegId]
+    0x40 S256 s256 [RegId RegId RegId]
     "Get timestamp of block at given height."
-    0x41 TIME [RegId RegId]
+    0x41 TIME time [RegId RegId]
 
     "Performs no operation."
-    0x47 NOOP []
+    0x47 NOOP noop []
     "Set flag register to a register."
-    0x48 FLAG [RegId]
+    0x48 FLAG flag [RegId]
     "Get the balance of contract of an asset ID."
-    0x49 BAL [RegId RegId RegId]
+    0x49 BAL bal [RegId RegId RegId]
     "Dynamic jump."
-    0x4A JMP [RegId]
+    0x4A JMP jmp [RegId]
     "Conditional dynamic jump."
-    0x4B JNE [RegId RegId RegId]
+    0x4B JNE jne [RegId RegId RegId]
     "Send a message to recipient address with call abi, coins, and output."
-    0x4C SMO [RegId RegId RegId RegId]
+    0x4C SMO smo [RegId RegId RegId RegId]
 
     "Adds a register and an immediate value."
-    0x50 ADDI [RegId RegId Imm12]
+    0x50 ADDI addi [RegId RegId Imm12]
     "Bitwise ANDs a register and an immediate value."
-    0x51 ANDI [RegId RegId Imm12]
+    0x51 ANDI andi [RegId RegId Imm12]
     "Divides a register and an immediate value."
-    0x52 DIVI [RegId RegId Imm12]
+    0x52 DIVI divi [RegId RegId Imm12]
     "Raises one register to the power of an immediate value."
-    0x53 EXPI [RegId RegId Imm12]
+    0x53 EXPI expi [RegId RegId Imm12]
     "Modulo remainder of a register and an immediate value."
-    0x54 MODI [RegId RegId Imm12]
+    0x54 MODI modi [RegId RegId Imm12]
     "Multiplies a register and an immediate value."
-    0x55 MULI [RegId RegId Imm12]
+    0x55 MULI muli [RegId RegId Imm12]
     "Bitwise ORs a register and an immediate value."
-    0x56 ORI [RegId RegId Imm12]
+    0x56 ORI ori [RegId RegId Imm12]
     "Left shifts a register by an immediate value."
-    0x57 SLLI [RegId RegId Imm12]
+    0x57 SLLI slli [RegId RegId Imm12]
     "Right shifts a register by an immediate value."
-    0x58 SRLI [RegId RegId Imm12]
+    0x58 SRLI srli [RegId RegId Imm12]
     "Subtracts a register and an immediate value."
-    0x59 SUBI [RegId RegId Imm12]
+    0x59 SUBI subi [RegId RegId Imm12]
     "Bitwise XORs a register and an immediate value."
-    0x5A XORI [RegId RegId Imm12]
+    0x5A XORI xori [RegId RegId Imm12]
     "Conditional jump."
-    0x5B JNEI [RegId RegId Imm12]
+    0x5B JNEI jnei [RegId RegId Imm12]
     "A byte is loaded from the specified address offset by an immediate value."
-    0x5C LB [RegId RegId Imm12]
+    0x5C LB lb [RegId RegId Imm12]
     "A word is loaded from the specified address offset by an immediate value."
-    0x5D LW [RegId RegId Imm12]
+    0x5D LW lw [RegId RegId Imm12]
     "Write the least significant byte of a register to memory."
-    0x5E SB [RegId RegId Imm12]
+    0x5E SB sb [RegId RegId Imm12]
     "Write a register to memory."
-    0x5F SW [RegId RegId Imm12]
+    0x5F SW sw [RegId RegId Imm12]
     "Copy an immediate number of bytes in memory."
-    0x60 MCPI [RegId RegId Imm12]
+    0x60 MCPI mcpi [RegId RegId Imm12]
     "Get transaction fields."
-    0x61 GTF [RegId RegId Imm12]
+    0x61 GTF gtf [RegId RegId Imm12]
 
     "Clear an immediate number of bytes in memory."
-    0x70 MCLI [RegId Imm18]
+    0x70 MCLI mcli [RegId Imm18]
     "Get metadata from memory."
-    0x71 GM [RegId Imm18]
+    0x71 GM gm [RegId Imm18]
     "Copy immediate value into a register"
-    0x72 MOVI [RegId Imm18]
+    0x72 MOVI movi [RegId Imm18]
     "Conditional jump against zero."
-    0x73 JNZI [RegId Imm18]
+    0x73 JNZI jnzi [RegId Imm18]
 
     "Jump."
-    0x90 JI [Imm24]
+    0x90 JI ji [Imm24]
     "Extend the current call frame's stack by an immediate value."
-    0x91 CFEI [Imm24]
+    0x91 CFEI cfei [Imm24]
     "Shrink the current call frame's stack by an immediate value."
-    0x92 CFSI [Imm24]
+    0x92 CFSI cfsi [Imm24]
 }
 
 /// Represents a 6-bit register ID, guaranteed to be masked by construction.
