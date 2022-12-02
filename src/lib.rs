@@ -263,6 +263,32 @@ impl Opcode {
     }
 }
 
+impl op::GM {
+    /// Construct a `GM` instruction from its arguments.
+    pub fn from_args(ra: RegId, args: GMArgs) -> Self {
+        Self::new(ra, Imm18::new(args as _))
+    }
+}
+
+impl op::GTF {
+    /// Construct a `GTF` instruction from its arguments.
+    pub fn from_args(ra: RegId, rb: RegId, args: GTFArgs) -> Self {
+        Self::new(ra, rb, Imm12::new(args as _))
+    }
+}
+
+impl Instruction {
+    /// Construct a `GM` instruction from its arguments.
+    pub fn gm(ra: u8, args: GMArgs) -> Self {
+        Self::GM(op::GM::from_args(RegId::from(ra), args))
+    }
+
+    /// Construct a `GM` instruction from its arguments.
+    pub fn gtf(ra: u8, rb: u8, args: GTFArgs) -> Self {
+        Self::GTF(op::GTF::from_args(RegId::from(ra), RegId::from(rb), args))
+    }
+}
+
 // Direct conversions
 
 impl From<u8> for RegId {
@@ -384,11 +410,58 @@ impl Into<u8> for Opcode {
 
 // --------------------------------------------------------
 
+impl core::iter::FromIterator<Instruction> for Vec<u8> {
+    fn from_iter<I: IntoIterator<Item = Instruction>>(iter: I) -> Self {
+        iter.into_iter().flat_map(<[u8; 4]>::from).collect()
+    }
+}
+
+impl core::iter::FromIterator<Instruction> for Vec<u32> {
+    fn from_iter<I: IntoIterator<Item = Instruction>>(iter: I) -> Self {
+        iter.into_iter().map(u32::from).collect()
+    }
+}
+
+// --------------------------------------------------------
+
 /// Produce two raw instructions from a word's hi and lo parts.
 pub fn raw_instructions_from_word(word: Word) -> [RawInstruction; 2] {
     let hi = (word >> 32) as RawInstruction;
     let lo = word as RawInstruction;
     [hi, lo]
+}
+
+/// Given an iterator yielding bytes, produces an iterator yielding `Instruction`s.
+///
+/// This function assumes each consecutive 4 bytes aligns with an instruction.
+///
+/// The produced iterator yields an `Err` in the case that an instruction fails to parse from 4
+/// consecutive bytes.
+pub fn from_bytes<I>(bs: I) -> impl Iterator<Item = Result<Instruction, InvalidOpcode>>
+where
+    I: IntoIterator<Item = u8>,
+{
+    let mut iter = bs.into_iter();
+    core::iter::from_fn(move || {
+        let a = iter.next()?;
+        let b = iter.next()?;
+        let c = iter.next()?;
+        let d = iter.next()?;
+        Some(Instruction::try_from([a, b, c, d]))
+    })
+}
+
+/// Given an iterator yielding u32s (i.e. "half words" or "raw instructions"), produces an iterator
+/// yielding `Instruction`s.
+///
+/// This function assumes each consecutive 4 bytes aligns with an instruction.
+///
+/// The produced iterator yields an `Err` in the case that an instruction fails to parse.
+pub fn from_u32s<I>(us: I) -> impl Iterator<Item = Result<Instruction, InvalidOpcode>>
+where
+    I: IntoIterator<Item = u32>,
+{
+    us.into_iter().map(|u| Instruction::try_from(u))
 }
 
 // --------------------------------------------------------
