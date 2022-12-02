@@ -17,8 +17,8 @@ pub use gm_args::{GMArgs, GTFArgs};
 pub use panic_reason::PanicReason;
 pub use instruction_result::InstructionResult;
 
-// Defines the `Instruction` and `Opcode` types, along with a dedicated type for each opcode's
-// instruction variant.
+// Defines the `Instruction` and `Opcode` types, along with an `op` module declaring a unique type
+// for each opcode's instruction variant.
 impl_opcodes! {
     "Adds two registers."
     0x10 ADD add [RegId RegId RegId]

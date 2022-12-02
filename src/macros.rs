@@ -10,7 +10,7 @@ macro_rules! impl_opcodes {
         #[doc = $doc]
         #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
         #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-        pub struct $Op([u8; 3]);
+        pub struct $Op(pub (super) [u8; 3]);
         impl_opcodes!(decl_op_struct $($rest)*);
     };
     (decl_op_struct) => {};
@@ -43,7 +43,7 @@ macro_rules! impl_opcodes {
         pub enum Instruction {
             $(
                 #[doc = $doc]
-                $Op($Op),
+                $Op(op::$Op),
             )*
         }
     };
@@ -331,7 +331,7 @@ macro_rules! impl_opcodes {
             fn try_from([op, a, b, c]: [u8; 4]) -> Result<Self, Self::Error> {
                 match Opcode::try_from(op)? {
                     $(
-                        Opcode::$Op => Ok(Self::$Op($Op([a, b, c]))),
+                        Opcode::$Op => Ok(Self::$Op(op::$Op([a, b, c]))),
                     )*
                 }
             }
@@ -341,10 +341,15 @@ macro_rules! impl_opcodes {
     // Entrypoint to the macro, generates structs, methods, opcode enum and instruction enum
     // separately.
     ($($tts:tt)*) => {
-        impl_opcodes!(decl_op_struct $($tts)*);
+        pub mod op {
+            //! Definitions and implementations for each unique Instruction type, one for each
+            //! unique `Opcode` variant.
+            use super::*;
+            impl_opcodes!(decl_op_struct $($tts)*);
+            impl_opcodes!(impl_op $($tts)*);
+        }
         impl_opcodes!(decl_opcode_enum $($tts)*);
         impl_opcodes!(decl_instruction_enum $($tts)*);
-        impl_opcodes!(impl_op $($tts)*);
         impl_opcodes!(impl_opcode $($tts)*);
         impl_opcodes!(impl_instruction $($tts)*);
     };
