@@ -8,7 +8,7 @@
 mod gm_args;
 mod instruction_result;
 #[macro_use]
-mod macros;
+pub mod macros;
 mod panic_reason;
 
 pub use fuel_types::{RegisterId, Word};
@@ -18,7 +18,8 @@ pub use instruction_result::InstructionResult;
 pub use panic_reason::PanicReason;
 
 // Defines the `Instruction` and `Opcode` types, along with an `op` module declaring a unique type
-// for each opcode's instruction variant.
+// for each opcode's instruction variant. For a detailed explanation of how this works, see the
+// `fuel_asm::macros` module level documentation.
 impl_instructions! {
     "Adds two registers."
     0x10 ADD add [RegId RegId RegId]
@@ -205,7 +206,7 @@ pub struct Imm24(u32);
 pub type RawInstruction = u32;
 
 /// Failed to parse a `u8` as a valid or non-reserved opcode.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct InvalidOpcode;
 
 impl RegId {
