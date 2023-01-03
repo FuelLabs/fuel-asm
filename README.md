@@ -1,3 +1,6 @@
+# ⚠ Archival Notice
+This repo is no longer active and has been moved to: https://github.com/FuelLabs/fuel-vm/tree/master/fuel-asm
+
 # Fuel ASM
 
 [![build](https://github.com/FuelLabs/fuel-asm/actions/workflows/ci.yml/badge.svg)](https://github.com/FuelLabs/fuel-asm/actions/workflows/ci.yml)
